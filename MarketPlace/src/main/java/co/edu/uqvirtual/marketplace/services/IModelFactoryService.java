@@ -12,5 +12,5 @@ public interface IModelFactoryService {
     public Boolean eliminarVendedor(String cedula);
     public boolean  verificarVendedorExistente(String cedula) ;
     public Vendedor obtenerVendedor(String cedula) ;
-    public ArrayList<Vendedor> obtenerEmpleados();
+    public ArrayList<Vendedor> obtenerEmpleados(String cedula);
 }

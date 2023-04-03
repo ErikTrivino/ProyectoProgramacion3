@@ -5,6 +5,5 @@ module co.edu.uqvirtual.marketplace {
 
     exports co.edu.uqvirtual.marketplace.aplicacion;
     opens co.edu.uqvirtual.marketplace.aplicacion to javafx.fxml;
-    exports co.edu.uqvirtual.marketplace.controller;
     opens co.edu.uqvirtual.marketplace.controller to javafx.fxml;
 }

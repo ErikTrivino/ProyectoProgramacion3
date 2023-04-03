@@ -12,24 +12,20 @@ public class MarketPlace implements IMarketPlaceService {
     private ArrayList<Vendedor> listaVendedores;
     private Administrador admin;
 
-
-
     public MarketPlace() {
         listaVendedores = new ArrayList<>();
-        admin = new Administrador("Erik", "Triviño", 19,"1234", new Usuario("admin", "1234"));
+        admin = new Administrador("Erik", "Triviño", "1234", new Usuario("admin", "1234"));
     }
 
-
     @Override
-    public Vendedor crearVendedor(String nombre, String apellido, Integer edad, String cedula, String usuario, String contrasenia) throws  DatosNulosException {
+    public Vendedor crearVendedor(String nombre, String apellido, String cedula, String usuario, String contrasenia) throws  DatosNulosException {
 
-        if (nombre == null && apellido == null && edad == null && usuario == null && contrasenia == null) {
+        if (nombre == null && apellido == null && usuario == null && contrasenia == null) {
             throw new DatosNulosException("Los datos estan nulos");
         }
-        Vendedor v1 = new Vendedor(nombre, apellido, edad, cedula, new Usuario(usuario, contrasenia));
+        Vendedor v1 = new Vendedor(nombre, apellido, cedula, new Usuario(usuario, contrasenia));
 
         listaVendedores.add(v1);
-
 
         return v1;
     }
@@ -55,8 +51,6 @@ public class MarketPlace implements IMarketPlaceService {
             throw new VendedorNoExisteException("No existe elemento");
 
         }
-
-
     }
 
     @Override
@@ -67,6 +61,18 @@ public class MarketPlace implements IMarketPlaceService {
     @Override
     public ArrayList<Vendedor> obtenerEmpleados(String cedula) {
 
+        return listaVendedores;
+    }
+    public boolean existenciaVendedor(String cedula) {
+        for (Vendedor vendedor : listaVendedores) {
+            if (vendedor.getCedula().equals(cedula)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Vendedor> getListVendedores() {
         return listaVendedores;
     }
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Vendedor extends Persona{
     private Usuario usuario;
+    private Usuario contrasenia;
+    private String direccion;
     private ArrayList<Vendedor> listaAliados;
     private ArrayList<Producto>listaProductos;
     private  ArrayList<Producto>listaProdutosSugeridos;
@@ -12,8 +14,8 @@ public class Vendedor extends Persona{
     private  ArrayList<Solicitud>listaSolicitudesEnivadas;
 
 
-    public Vendedor(String nombre, String apellido, Integer edad, String cedula, Usuario usuario) {
-        super(nombre, apellido, edad, cedula);
+    public Vendedor(String nombre, String apellido, String cedula, Usuario usuario) {
+        super(nombre, apellido, cedula);
         listaAliados = new ArrayList<>();
         listaProductos = new ArrayList<>();
         listaProdutosSugeridos = new ArrayList<>();
@@ -21,6 +23,8 @@ public class Vendedor extends Persona{
         listaSolicitudes = new ArrayList<>();
         listaSolicitudesEnivadas = new ArrayList<>();
         this.usuario = usuario;
+        this.contrasenia = contrasenia;
+        this.direccion = direccion;
     }
 
     public Usuario getUsuario() {
@@ -78,4 +82,21 @@ public class Vendedor extends Persona{
     public void setListaSolicitudesEnivadas(ArrayList<Solicitud> listaSolicitudesEnivadas) {
         this.listaSolicitudesEnivadas = listaSolicitudesEnivadas;
     }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public Usuario getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(Usuario contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+
 }

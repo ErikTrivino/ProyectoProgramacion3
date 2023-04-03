@@ -3,13 +3,11 @@ package co.edu.uqvirtual.marketplace.modelo;
 public class Persona {
     private String nombre;
     private String apellido;
-    private Integer edad;
     private String cedula;
 
-    public Persona(String nombre, String apellido, Integer edad, String cedula) {
+    public Persona(String nombre, String apellido, String cedula) {
         this.nombre = nombre;
         this.apellido = apellido;
-        this.edad = edad;
         this.cedula = cedula;
     }
 
@@ -35,13 +33,5 @@ public class Persona {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
-    }
-
-    public Integer getEdad() {
-        return edad;
-    }
-
-    public void setEdad(Integer edad) {
-        this.edad = edad;
     }
 }
