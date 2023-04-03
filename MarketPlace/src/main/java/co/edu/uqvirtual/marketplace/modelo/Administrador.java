@@ -7,4 +7,12 @@ public class Administrador extends Persona{
         super(nombre, apellido, cedula);
         this.usuario = usuario;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

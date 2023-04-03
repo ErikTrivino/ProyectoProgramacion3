@@ -16,6 +16,14 @@ public class MarketPlace implements IMarketPlaceService {
         listaVendedores = new ArrayList<>();
         admin = new Administrador("Erik", "Triviño", "1234", new Usuario("admin", "1234"));
     }
+    public boolean obtenerAdmin(String nombreUsuario, String contrsenia){
+        if(nombreUsuario.equals(admin.getUsuario().getNombreUsuario()) && contrsenia.equals(admin.getUsuario().getContrasenia())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     @Override
     public Vendedor crearVendedor(String nombre, String apellido, String cedula, String usuario, String contrasenia) throws  DatosNulosException {
@@ -54,8 +62,8 @@ public class MarketPlace implements IMarketPlaceService {
     }
 
     @Override
-    public Vendedor obtenerVendedor(String cedula) throws VendedorNoExisteException {
-        return listaVendedores.stream().filter(x -> x.getCedula() == cedula).findFirst().get();
+    public Vendedor obtenerVendedor(String nombreUsuario) throws VendedorNoExisteException {
+        return listaVendedores.stream().filter(x -> x.getUsuario().getNombreUsuario() == nombreUsuario).findFirst().get();
     }
 
     @Override
@@ -63,9 +71,9 @@ public class MarketPlace implements IMarketPlaceService {
 
         return listaVendedores;
     }
-    public boolean existenciaVendedor(String cedula) {
+    public boolean existenciaVendedor(String nombreUsuario) {
         for (Vendedor vendedor : listaVendedores) {
-            if (vendedor.getCedula().equals(cedula)) {
+            if (vendedor.getUsuario().getNombreUsuario().equals(nombreUsuario)) {
                 return true;
             }
         }

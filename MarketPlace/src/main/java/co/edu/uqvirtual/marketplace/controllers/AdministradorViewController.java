@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -261,5 +262,18 @@ public class AdministradorViewController {
             return true;
         }
         return false;
+    }
+    @FXML
+    void btnNuevo(ActionEvent event) {
+
+    }
+    @FXML
+    void salir(ActionEvent event) {
+        salir();
+    }
+    public void salir() {
+
+        Stage stage = (Stage) this.btnGuardar.getScene().getWindow();
+        stage.close();
     }
 }
