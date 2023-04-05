@@ -1,6 +1,7 @@
 package co.edu.uqvirtual.markerplace.modelo;
 
 import co.edu.uqvirtual.markerplace.exceptions.DatosNulosException;
+import co.edu.uqvirtual.markerplace.exceptions.ProductoNoExiste;
 import co.edu.uqvirtual.markerplace.exceptions.VendedorException;
 import co.edu.uqvirtual.markerplace.exceptions.VendedorNoExisteException;
 import co.edu.uqvirtual.markerplace.services.IMarketPlaceService;
@@ -25,6 +26,9 @@ public class MarketPlace implements IMarketPlaceService {
         }
     }
 
+    public ArrayList<Vendedor> getListVendedores() {
+        return listaVendedores;
+    }
 
     @Override
     public Vendedor crearVendedor(String nombre, String apellido, String cedula, String usuario, String contrasenia) throws  DatosNulosException {
@@ -39,7 +43,7 @@ public class MarketPlace implements IMarketPlaceService {
         return v1;
     }
 @Override
-    public void actualizarVendedor(String nombre, String apellido, String cedula) throws VendedorException {
+    public void actualizarVendedor(String nombre, String apellido, String cedula, String usuario, String contrasenia) throws VendedorException {
 
 
     int pos = obtenerPosicionVendedor(cedula);
@@ -47,7 +51,7 @@ public class MarketPlace implements IMarketPlaceService {
     Vendedor v1 =  listaVendedores.get(pos);
     v1.setNombre(nombre);
     v1.setApellido(apellido);
-    v1.setCedula(cedula);
+
 
 
     listaVendedores.set(pos, v1);
@@ -89,6 +93,7 @@ public class MarketPlace implements IMarketPlaceService {
         }else{
             throw new VendedorNoExisteException("No existe elemento");
 
+
         }
     }
 
@@ -98,20 +103,110 @@ public class MarketPlace implements IMarketPlaceService {
     }
 
     @Override
-    public ArrayList<Vendedor> obtenerEmpleados(String cedula) {
+    public ArrayList<Vendedor> obtenerEmpleados() {
 
         return listaVendedores;
     }
-    public boolean existenciaVendedor(String nombreUsuario) {
-        for (Vendedor vendedor : listaVendedores) {
-            if (vendedor.getUsuario().getNombreUsuario().equals(nombreUsuario)) {
-                return true;
-            }
+
+    @Override
+    public Producto crearProducto(String nombre, String imagen, String precio, Estado estado,Vendedor vendedor) throws DatosNulosException {
+       Producto p1 = new Producto(nombre, imagen, precio, estado);
+       int pos = obtenerPosicionVendedor(vendedor.getCedula());
+       listaVendedores.get(pos).getListaProductos().add(p1);
+
+
+        return  p1;
+    }
+
+    @Override
+    public void actualizarProducto(String nombre, String imagen, String precio, Estado estado,Vendedor vendedor) throws DatosNulosException, ProductoNoExiste {
+        int posVendedor = obtenerPosicionVendedor(vendedor.getCedula());
+        Optional<Producto> p1 = listaVendedores.get(posVendedor).getListaProductos().stream().filter(x -> x.getNombre().equals(nombre)).findFirst();
+
+        if(p1.isPresent()){
+
+            int posPro = obtenerPosicionProducto(nombre, vendedor.getListaProductos());
+            vendedor.getListaProductos().set(posPro, new Producto(nombre,imagen,  precio, estado));
+
+
+        }else{
+            throw new ProductoNoExiste("El producto no existe");
         }
-        return false;
+
+
+
+    }
+    public int obtenerPosicionProducto(String nombre, ArrayList<Producto> listaProductos){
+        int posicion = 0;
+        boolean flagEncontrado = false;
+        do {
+            for(int i = 0; i < listaProductos.size(); i++){
+                if (listaProductos.get(i).getNombre().equals(nombre)) {
+                    posicion = i;
+                    flagEncontrado = true;
+                }
+            }
+            if(flagEncontrado == false){
+                posicion = -1;
+
+            }
+
+        }while(flagEncontrado == false);
+        return posicion;
     }
 
-    public ArrayList<Vendedor> getListVendedores() {
-        return listaVendedores;
+
+    @Override
+    public boolean verificarProductoExistente(String nombre,Vendedor vendedor) throws ProductoNoExiste {
+        int posVendedor = obtenerPosicionVendedor(vendedor.getCedula());
+        Optional<Producto> p1 = listaVendedores.get(posVendedor).getListaProductos().stream().filter(x -> x.getNombre().equals(nombre)).findFirst();
+
+        if(p1.isPresent()){
+            return true;
+        }else{
+            return false;
+        }
+
     }
+
+    @Override
+    public void eliminarProducto(String nombre,Vendedor vendedor) throws ProductoNoExiste {
+
+        int posVendedor = obtenerPosicionVendedor(vendedor.getCedula());
+        int posProducto  = obtenerPosicionProducto(nombre, vendedor.getListaProductos());
+
+        Optional<Producto> p1 = listaVendedores.get(posVendedor).getListaProductos().stream().filter(x -> x.getNombre().equals(nombre)).findFirst();
+
+        if(p1.isPresent()){
+            vendedor.getListaProductos().remove(posProducto);
+        }else{
+           throw new ProductoNoExiste("Prodcuto no existe");
+        }
+
+
+
+
+    }
+
+    @Override
+    public Producto obtenerProducto(String nombre,Vendedor vendedor) throws ProductoNoExiste {
+        int posVendedor = obtenerPosicionVendedor(vendedor.getCedula());
+        Optional<Producto> p1 = listaVendedores.get(posVendedor).getListaProductos().stream().filter(x -> x.getNombre().equals(nombre)).findFirst();
+
+        if(p1.isPresent()){
+            return p1.get();
+        }else{
+            throw new ProductoNoExiste("Producto no existe");
+        }
+    }
+
+    @Override
+    public ArrayList<Producto> obtenerProductos(Vendedor vendedor) {
+        int posVendedor = obtenerPosicionVendedor(vendedor.getCedula());
+
+        return listaVendedores.get(posVendedor).getListaProductos();
+    }
+
+
+
 }

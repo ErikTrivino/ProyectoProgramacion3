@@ -1,5 +1,6 @@
 package co.edu.uqvirtual.markerplace.controllers;
 
+import co.edu.uqvirtual.markerplace.exceptions.AccesoNoAutorizadoException;
 import co.edu.uqvirtual.markerplace.exceptions.DatosNulosException;
 import co.edu.uqvirtual.markerplace.exceptions.VendedorNoExisteException;
 import co.edu.uqvirtual.markerplace.modelo.Vendedor;
@@ -47,7 +48,7 @@ public class LoginViewController {
         stage.close();
     }
     @FXML
-    void btnIngresar(ActionEvent actionEvent) throws IOException, DatosNulosException, VendedorNoExisteException {
+    void btnIngresar(ActionEvent actionEvent) throws DatosNulosException, VendedorNoExisteException, IOException, AccesoNoAutorizadoException {
         String usuario=txtUsuario.getText();
         String contrasenia=txtContrasenia.getText();
         Vendedor vendedor=null;
@@ -55,7 +56,7 @@ public class LoginViewController {
 
 
         if (!(usuario.equals("") && contrasenia.equals(""))){
-            System.out.println(usuario);
+
             if(modelFactoryController.marketPlace.obtenerAdmin(usuario, contrasenia)){
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/agregar-vendedor.fxml"));
@@ -71,8 +72,8 @@ public class LoginViewController {
 
 
             }else{
-                if(modelFactoryController.marketPlace.existenciaVendedor(usuario)){
-                    Vendedor v1 = modelFactoryController.marketPlace.obtenerVendedor(usuario);
+                if(modelFactoryController.verificarVendedorExistente(usuario)){
+                    Vendedor v1 = modelFactoryController.obtenerVendedor(usuario);
 
                     FXMLLoader loader = new FXMLLoader();
                     loader.setLocation(getClass().getResource("ventanaAdmin.fxml"));
@@ -87,6 +88,12 @@ public class LoginViewController {
                 }else{
                     mostrarMensaje("Datos incorrectos", null, "Asegurese de introducir todos los datos",
                             Alert.AlertType.ERROR );
+                    try {
+                        throw new AccesoNoAutorizadoException("El acceso no fue autorizado");
+                    }catch (AccesoNoAutorizadoException e){
+                        e.printStackTrace();
+                    }
+
                 }
 
             }
@@ -96,6 +103,12 @@ public class LoginViewController {
         else {
             mostrarMensaje("Datos de acceso incompletos", null, "Asegurese de introducir todos los datos",
                     Alert.AlertType.ERROR);
+            try {
+                throw new AccesoNoAutorizadoException("El acceso no fue autorizado");
+            }catch (AccesoNoAutorizadoException e){
+                e.printStackTrace();
+            }
+
         }
 
 

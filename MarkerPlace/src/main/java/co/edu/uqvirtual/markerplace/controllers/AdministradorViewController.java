@@ -131,7 +131,7 @@ public class AdministradorViewController {
         if(vendedorSeleccionado != null){
             if (datosValidos(nombre,apellido ,cedula, usuario, contrasenia)) {
 
-                modelFactoryController.actualizarVendedor(nombre, apellido, vendedorSeleccionado.getCedula());
+                modelFactoryController.actualizarVendedor(nombre, apellido, vendedorSeleccionado.getCedula(), usuario,contrasenia);
 
 
                 modelFactoryController.mostrarMensaje("Notificacion Vendedor", "Vendedor Actualizado", "El Vendedor ha sido actualizado",
@@ -168,7 +168,7 @@ public class AdministradorViewController {
             if (datosValidos(nombre, apellido, cedula, usuario, contracenia)) {
 
                 Vendedor vendedor1 = null;
-                vendedor1 = modelFactoryController.agregarVendedor( nombre, apellido, cedula, usuario, contracenia);
+                vendedor1 = modelFactoryController.crearVendedor( nombre, apellido, cedula, usuario, contracenia);
                 cargarListadoVendedores();
                 if (vendedor1 != null) {
                     limpiarDatos();
@@ -249,7 +249,7 @@ public class AdministradorViewController {
         if (contrasenia == null || contrasenia.equals("") || contrasenia.isEmpty()) {
             mensaje += "la contrasenia es invalido";
         }
-        if (modelFactoryController.existenciaVendedor(cedula) && vendedorSeleccionado == null) {
+        if (modelFactoryController.verificarVendedorExistente(cedula) && vendedorSeleccionado == null) {
             mensaje += "Ya existe un vendedor con  documento";
         }
 

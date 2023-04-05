@@ -2,15 +2,18 @@ package co.edu.uqvirtual.markerplace.controllers;
 
 import co.edu.uqvirtual.markerplace.exceptions.DatosNulosException;
 import co.edu.uqvirtual.markerplace.exceptions.VendedorException;
+import co.edu.uqvirtual.markerplace.modelo.Estado;
 import co.edu.uqvirtual.markerplace.modelo.MarketPlace;
+import co.edu.uqvirtual.markerplace.modelo.Producto;
 import co.edu.uqvirtual.markerplace.modelo.Vendedor;
 
+import co.edu.uqvirtual.markerplace.services.IModelFactoryService;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ModelFactoryController {
+public class ModelFactoryController implements IModelFactoryService {
     MarketPlace marketPlace;
     String mensajelog = "";
     String nombreVendedorLog="";
@@ -40,11 +43,53 @@ public class ModelFactoryController {
         this.marketPlace = marketPlace;
     }
 
-    public Vendedor crearVendedor(String nombre, String apellido, Integer edad, String cedula, String usuario, String contrasenia) {
+
+
+    /**
+     *
+     * CRUD VENDEDORES
+     */
+    @Override
+    public void eliminarVendedor(String cedula)  {
+
+        try {
+            this.getMarketPlace().eliminarVendedor(cedula);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public boolean verificarVendedorExistente(String cedula) {
+        try {
+            return marketPlace.verificarVendedorExistente(cedula);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+    @Override
+    public Vendedor obtenerVendedor(String nombreUsuario) {
+        try {
+            return getMarketPlace().obtenerVendedor(nombreUsuario);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    @Override
+    public Vendedor crearVendedor(String nombre, String apellido, String cedula, String usuario, String contrasenia) {
         Vendedor vendedor = null;
 
         try {
-            vendedor = this.getMarketPlace().crearVendedor(nombre, apellido, cedula, usuario, contrasenia);
+            vendedor = marketPlace.crearVendedor(nombre, apellido, cedula, usuario, contrasenia);
+
         } catch (DatosNulosException e1) {
             e1.printStackTrace();
         }
@@ -52,29 +97,99 @@ public class ModelFactoryController {
         return vendedor;
     }
 
-    public void eliminarVendedor(String cedula) throws VendedorException {
+    @Override
+    public void actualizarVendedor(String nombre, String apellido, String cedula, String usuario, String contrasenia)  {
 
-
-
-           this.getMarketPlace().eliminarVendedor(cedula);
-
+        try{
+            this.getMarketPlace().actualizarVendedor(nombre,apellido,cedula,usuario,contrasenia);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
     }
 
-    public Vendedor obtenerVendedor(String cedula) {
-        return null;
+    /**
+     *
+     * CRUD PRODUCTOS
+     */
+
+
+    @Override
+    public ArrayList<Vendedor> obtenerVendedores() {
+        return marketPlace.obtenerEmpleados();
     }
 
-    public ArrayList<Vendedor> obtenerEmpleados() {
-        return this.getMarketPlace().obtenerEmpleados("");
+    /**
+     * CRUD PRODUCTOS
+     * */
+
+    @Override
+    public Producto crearProducto(String nombre, String imagen, String precio, Estado estado,Vendedor vendedor) {
+        try{
+           Producto p1 =  this.getMarketPlace().crearProducto(nombre,imagen, precio, estado,vendedor);
+            return p1;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+
+        }
+
     }
 
-    public void actualizarVendedor(String nombre, String apellido, String cedula) throws VendedorException {
-
-        this.getMarketPlace().actualizarVendedor(nombre, apellido, cedula);
+    @Override
+    public void actualizarProducto(String nombre, String imagen, String precio, Estado estado,Vendedor vendedor) {
+        try{
+            this.getMarketPlace().actualizarProducto(nombre, imagen, precio, estado, vendedor);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
+
+    @Override
+    public void eliminarProducto(String nombre,Vendedor vendedor) {
+
+        try{
+            this.getMarketPlace().eliminarProducto(nombre, vendedor);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Producto obtenerProducto(String nombre,Vendedor vendedor) {
+        try{
+            return this.getMarketPlace().obtenerProducto(nombre, vendedor);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    @Override
+    public boolean verificarProductoExistente(String nombre,Vendedor vendedor) {
+        try{
+            return this.getMarketPlace().verificarProductoExistente(nombre, vendedor);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    @Override
+    public ArrayList<Producto> obtenerProductos(Vendedor vendedor) {
+        return this.getMarketPlace().obtenerProductos(vendedor);
+    }
+
+
+
+
+
     void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
 
         Alert alerta = new Alert(alertType);
@@ -84,33 +199,8 @@ public class ModelFactoryController {
         alerta.showAndWait();
 
     }
-    public boolean existenciaVendedor(String cedula) {
-        return marketPlace.existenciaVendedor(cedula);
-    }
-    public ArrayList<Vendedor> obtenerVendedores() {
-        return marketPlace.getListVendedores();
-    }
-    public Vendedor agregarVendedor(String nombre,String apellido,String cedula,String usuario,String contrasenia)throws DatosNulosException, IOException {
-        mensajelog="";
-        nombreVendedorLog="";
-
-        Vendedor vendedor = marketPlace.crearVendedor(nombre, apellido, cedula, usuario, contrasenia);
 
 
 
-        if (vendedor != null) {
-            mensajelog += "se guardo el vendedor satisfactorimente";
-            nombreVendedorLog=vendedor.getNombre();
-        } else {
-            mensajelog += "no se guardo el vendedor";
-            nombreVendedorLog=nombre;
-        }
-
-        MarketPlace datosAEnviar=new MarketPlace();
-
-        datosAEnviar=marketPlace;
-
-        return vendedor;
-    }
 
 }
