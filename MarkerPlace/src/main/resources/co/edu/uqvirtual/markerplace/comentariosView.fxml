@@ -9,25 +9,32 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="497.0" prefWidth="470.0" style="-fx-background-color: #3b5998;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uqvirtual.proyecto.controller.ComentariosController">
+<AnchorPane prefHeight="514.0" prefWidth="514.0" style="-fx-background-color: #3b5998;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uqvirtual.markerplace.controllers.ComentariosViewController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="130.0" layoutX="14.0" layoutY="360.0" stroke="TRANSPARENT" strokeType="INSIDE" width="442.0" />
-      <TableView fx:id="tblComentarios" layoutX="14.0" layoutY="106.0" prefHeight="230.0" prefWidth="442.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="368.0" layoutX="26.0" layoutY="113.0" stroke="TRANSPARENT" strokeType="INSIDE" width="460.0" />
+      <TableView fx:id="tblComentarios" layoutX="37.0" layoutY="122.0" prefHeight="230.0" prefWidth="441.0">
          <columns>
-            <TableColumn fx:id="colNombre" prefWidth="149.0" text="NOMBRE" />
-            <TableColumn fx:id="colApellido" prefWidth="144.0" text="APELLIDO" />
-            <TableColumn fx:id="colComentario" prefWidth="133.0" text="COMENTARIO" />
+            <TableColumn fx:id="colNombre" prefWidth="149.0" text="Nombre" />
+            <TableColumn fx:id="colCedula" prefWidth="144.0" text="N° Identificación" />
+            <TableColumn fx:id="colComentario" prefWidth="147.19997558593752" text="Comentario" />
          </columns>
       </TableView>
-      <TextField fx:id="texComentarios" layoutX="59.0" layoutY="375.0" prefHeight="71.0" prefWidth="352.0" />
-      <Button fx:id="butComenmtar" layoutX="195.0" layoutY="457.0" mnemonicParsing="false" onAction="#butComenmtar" style="-fx-background-color: #3b5998;" text="COMENTAR" textFill="WHITE">
+      <TextField fx:id="texComentarios" layoutX="37.0" layoutY="364.0" prefHeight="71.0" prefWidth="441.0">
+         <font>
+            <Font name="Franklin Gothic Book" size="14.0" />
+         </font></TextField>
+      <Button fx:id="butComenmtar" layoutX="220.0" layoutY="445.0" mnemonicParsing="false" onAction="#butComenmtar" style="-fx-background-color: #3b5998;" text="Comentar" textFill="WHITE">
          <font>
             <Font name="Franklin Gothic Book" size="14.0" />
          </font></Button>
-      <Label alignment="CENTER" layoutX="89.0" layoutY="29.0" prefHeight="35.0" prefWidth="291.0" text="GESTINAR COMENTARIOS" textFill="WHITE">
+      <Label alignment="CENTER" layoutX="112.0" layoutY="49.0" prefHeight="35.0" prefWidth="291.0" text="Gestionar Comentarios" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Franklin Gothic Book" size="24.0" />
          </font>
       </Label>
+      <Button fx:id="btnSalir" layoutX="467.0" layoutY="24.0" mnemonicParsing="false" onAction="#tbSalirAction" style="-fx-background-color: #37548e;" text="X" textFill="WHITE">
+         <font>
+            <Font name="Franklin Gothic Book" size="14.0" />
+         </font></Button>
    </children>
 </AnchorPane>

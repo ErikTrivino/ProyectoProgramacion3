@@ -131,7 +131,7 @@ public class AdministradorViewController {
         if(vendedorSeleccionado != null){
             if (datosValidos(nombre,apellido ,cedula, usuario, contrasenia)) {
 
-                modelFactoryController.actualizarVendedor(nombre, apellido, vendedorSeleccionado.getCedula(), usuario,contrasenia);
+                modelFactoryController.actualizarVendedor(nombre,apellido,cedula,usuario,contrasenia);
 
 
                 modelFactoryController.mostrarMensaje("Notificacion Vendedor", "Vendedor Actualizado", "El Vendedor ha sido actualizado",

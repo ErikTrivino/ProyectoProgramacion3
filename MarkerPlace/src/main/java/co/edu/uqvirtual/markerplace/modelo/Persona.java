@@ -1,9 +1,18 @@
 package co.edu.uqvirtual.markerplace.modelo;
 
-public class Persona {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Persona implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private String nombre;
     private String apellido;
     private String cedula;
+
+    public Persona() {
+
+    }
 
     public Persona(String nombre, String apellido, String cedula) {
         this.nombre = nombre;

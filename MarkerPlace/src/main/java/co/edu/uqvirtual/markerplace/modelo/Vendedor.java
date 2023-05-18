@@ -1,17 +1,23 @@
 package co.edu.uqvirtual.markerplace.modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Vendedor extends Persona{
+public class Vendedor extends Persona implements Serializable {
+
+    private static final long serialVersionUID = 1l;
     private Usuario usuario;
-    private Usuario contrasenia;
+
     private ArrayList<Vendedor> listaAliados;
     private ArrayList<Producto>listaProductos;
     private  ArrayList<Producto>listaProdutosSugeridos;
     private ArrayList<Chat>listaChat;
     private  ArrayList<Solicitud>listaSolicitudes;
     private  ArrayList<Solicitud>listaSolicitudesEnivadas;
+    private ArrayList<Transaccion> listaTransacciones;
 
+    public Vendedor() {
+    }
 
     public Vendedor(String nombre, String apellido, String cedula, Usuario usuario) {
         super(nombre, apellido, cedula);
@@ -21,8 +27,9 @@ public class Vendedor extends Persona{
         listaChat = new ArrayList<>();
         listaSolicitudes = new ArrayList<>();
         listaSolicitudesEnivadas = new ArrayList<>();
+        listaTransacciones = new ArrayList<>();
         this.usuario = usuario;
-        this.contrasenia = contrasenia;
+
     }
 
     public Usuario getUsuario() {
@@ -39,10 +46,6 @@ public class Vendedor extends Persona{
 
     public void setListaAliados(ArrayList<Vendedor> listaAliados) {
         this.listaAliados = listaAliados;
-    }
-
-    public ArrayList<Producto> getListaProductos() {
-        return listaProductos;
     }
 
     public void setListaProductos(ArrayList<Producto> listaProductos) {
@@ -80,13 +83,15 @@ public class Vendedor extends Persona{
     public void setListaSolicitudesEnivadas(ArrayList<Solicitud> listaSolicitudesEnivadas) {
         this.listaSolicitudesEnivadas = listaSolicitudesEnivadas;
     }
-
-    public Usuario getContrasenia() {
-        return contrasenia;
+    public ArrayList<Producto> getListaProductos() {
+        return listaProductos;
     }
 
-    public void setContrasenia(Usuario contrasenia) {
-        this.contrasenia = contrasenia;
+    public ArrayList<Transaccion> getListaTransacciones() {
+        return listaTransacciones;
     }
 
+    public void setListaTransacciones(ArrayList<Transaccion> listaTransacciones) {
+        this.listaTransacciones = listaTransacciones;
+    }
 }

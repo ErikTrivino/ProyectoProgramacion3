@@ -8,7 +8,6 @@ import co.edu.uqvirtual.markerplace.modelo.Estado;
 import co.edu.uqvirtual.markerplace.modelo.Producto;
 import co.edu.uqvirtual.markerplace.modelo.Vendedor;
 
-
 import java.util.ArrayList;
 
 public interface IMarketPlaceService {
@@ -20,10 +19,10 @@ public interface IMarketPlaceService {
     public ArrayList<Vendedor> obtenerEmpleados();
 
 
-    public Producto crearProducto(String nombre, String imagen, String precio, Estado estado,Vendedor vendedor) throws DatosNulosException;
-    public void  actualizarProducto(String nombre, String imagen, String precio, Estado estado,Vendedor vendedor) throws DatosNulosException, ProductoNoExiste;
-    public boolean verificarProductoExistente(String nombre,Vendedor vendedor) throws ProductoNoExiste;
-    public void eliminarProducto(String nombre,Vendedor vendedor) throws ProductoNoExiste;
-    public Producto obtenerProducto(String nombre,Vendedor vendedor) throws ProductoNoExiste;
-    public ArrayList<Producto> obtenerProductos(Vendedor vendedor);
+    public Producto crearProducto(String nombre, String imagen, String precio, Estado estado,String cedulaVendedor, String fechaMomento) throws DatosNulosException;
+    public void  actualizarProducto(String nombre, String imagen, String precio, Estado estado,String cedulaVendedor) throws DatosNulosException, ProductoNoExiste;
+    public boolean verificarProductoExistente(String nombre,String cedulaVendedor) throws ProductoNoExiste;
+    public void eliminarProducto(String nombre,String cedulaVendedor) throws ProductoNoExiste;
+    public Producto obtenerProducto(String nombre,String cedulaVendedor) throws ProductoNoExiste;
+    public ArrayList<Producto> obtenerProductos(String cedulaVendedor);
 }
