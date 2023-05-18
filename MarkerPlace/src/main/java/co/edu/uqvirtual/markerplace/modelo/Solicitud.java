@@ -1,14 +1,37 @@
 package co.edu.uqvirtual.markerplace.modelo;
 
-public class Solicitud {
+import java.io.Serializable;
+
+public class Solicitud implements Serializable {
+    private static final long serialVersionUID = 1l;
+    private Vendedor vendedorEnviado;
+    private Vendedor VendedorResivido;
     private String nombre;
-    private String apellido;
+    private String cedula;
     private boolean respuesta;
 
-    public Solicitud(String nombre, String apellido, boolean respuesta) {
+
+
+    public Solicitud(String nombre, String cedula, boolean respuesta) {
         this.nombre = nombre;
-        this.apellido = apellido;
+        this.cedula = cedula;
         this.respuesta = respuesta;
+    }
+    public Solicitud() {
+        super();
+    }
+    public Vendedor getVendedorEnviado(){
+        return vendedorEnviado;
+    }
+    public void setVendedorEnviado(Vendedor vendedorEnviado){
+        this.vendedorEnviado = vendedorEnviado;
+    }
+    public Vendedor getVendedorResivido() {
+        return VendedorResivido;
+    }
+
+    public void setVendedorResivido(Vendedor vendedorResivido) {
+        this.VendedorResivido = vendedorResivido;
     }
 
     public String getNombre() {
@@ -19,12 +42,12 @@ public class Solicitud {
         this.nombre = nombre;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getCedula() {
+        return cedula;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
     }
 
     public boolean isRespuesta() {
@@ -34,4 +57,7 @@ public class Solicitud {
     public void setRespuesta(boolean respuesta) {
         this.respuesta = respuesta;
     }
+
+
+
 }

@@ -1,8 +1,12 @@
 package co.edu.uqvirtual.markerplace.modelo;
 
 
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Comentario {
+public class Comentario implements Serializable {
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ATRIBUTOS
@@ -10,10 +14,12 @@ public class Comentario {
 
 	private Vendedor vendedorEnviado;
 	private Producto productoComentado;
-
+	private String nombre;
+	private String apellido;
 	private String comentario;
+	public Comentario() {
 
-	public Comentario() {}
+	}
 
 	public Comentario(Vendedor vendedorEnviado, Producto productoComentado, String comentario) {
 		this.vendedorEnviado = vendedorEnviado;
@@ -40,9 +46,23 @@ public class Comentario {
 		this.comentario = comentario;
 	}
 
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getApellido() {
+		return apellido;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
 
 
-	
 	//..........................................METODOS
 	
 }

@@ -9,11 +9,12 @@ import java.io.IOException;
 public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("login-view.fxml"));
+        
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("loginView.fxml")); //gestionarAliados loginView
         Scene scene = new Scene(fxmlLoader.load());
-
         stage.setScene(scene);
         stage.show();
+
     }
 
     public static void main(String[] args) {

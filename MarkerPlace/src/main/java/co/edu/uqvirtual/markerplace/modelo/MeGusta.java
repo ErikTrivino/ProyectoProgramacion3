@@ -1,12 +1,17 @@
 package co.edu.uqvirtual.markerplace.modelo;
 
-public class MeGusta {
+import java.io.Serializable;
+
+public class MeGusta implements Serializable {
+    private static final long serialVersionUID = 1l;
     private boolean meGusta;
     private Producto producto;
     private Vendedor vendedor;
 
+    public MeGusta() {
+    }
 
-    public MeGusta( Producto producto, Vendedor vendedor) {
+    public MeGusta(Producto producto, Vendedor vendedor) {
         this.meGusta = true;
         this.producto = producto;
         this.vendedor = vendedor;

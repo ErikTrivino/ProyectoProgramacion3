@@ -1,10 +1,18 @@
 package co.edu.uqvirtual.markerplace.controllers;
 
+import co.edu.uqvirtual.markerplace.crud.CrudAdminViewController;
+import co.edu.uqvirtual.markerplace.crud.CrudVendedorViewController;
+import co.edu.uqvirtual.markerplace.exceptions.AccesoNoAutorizadoException;
 import co.edu.uqvirtual.markerplace.exceptions.DatosNulosException;
 import co.edu.uqvirtual.markerplace.exceptions.VendedorNoExisteException;
+import co.edu.uqvirtual.markerplace.modelo.Administrador;
+import co.edu.uqvirtual.markerplace.modelo.MarketPlace;
 import co.edu.uqvirtual.markerplace.modelo.Vendedor;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,24 +28,28 @@ import java.io.IOException;
 
 public class LoginViewController {
     ModelFactoryController modelFactoryController = ModelFactoryController.getInstance();
+    CrudAdminViewController crudAdminViewController = new CrudAdminViewController(modelFactoryController);
+    CrudVendedorViewController crudVendedorViewController = new CrudVendedorViewController(modelFactoryController);
 
     public void setModelFactoryController(ModelFactoryController modelFactoryController) {
         this.modelFactoryController = modelFactoryController;
     }
 
     @FXML
-    private TextField txtUsuario;
+    private TextField txtUsuario_loginView;
 
     @FXML
-    private TextField txtContrasenia;
+    private TextField txtContraseña_loginView;
 
 
 
     @FXML
     private Button btnCancelar;
 
+
+    private MarketplaceViewController marketplaceViewController;
     @FXML
-    void btnCancelar(ActionEvent event) {
+    void btnCancelar_loginView(ActionEvent event) {
         salir();
     }
 
@@ -46,47 +58,84 @@ public class LoginViewController {
         Stage stage = (Stage) this.btnCancelar.getScene().getWindow();
         stage.close();
     }
+
+    public void mostrarPestaniaPrincipal(ActionEvent event){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/marketplaceView.fxml"));
+
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+    }
     @FXML
-    void btnIngresar(ActionEvent actionEvent) throws IOException, DatosNulosException, VendedorNoExisteException {
-        String usuario=txtUsuario.getText();
-        String contrasenia=txtContrasenia.getText();
+    void btnIngresar_loginView(ActionEvent actionEvent) throws DatosNulosException, VendedorNoExisteException, IOException, AccesoNoAutorizadoException {
+        String usuario=txtUsuario_loginView.getText();
+        String contrasenia=txtContraseña_loginView.getText();
         Vendedor vendedor=null;
 
 
 
         if (!(usuario.equals("") && contrasenia.equals(""))){
-            System.out.println(usuario);
-            if(modelFactoryController.marketPlace.obtenerAdmin(usuario, contrasenia)){
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/agregar-vendedor.fxml"));
 
-                Parent root = loader.load();
-                Scene scene = new Scene(root);
-                //AdministradorViewController inicioForm = loader.getController();
-                //inicioForm.init(user,cargoUsuario(user, pass));
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                //stage.setTitle("Tu Finca Raíz | Inicio");
-                stage.setScene(scene);
-                salir();
+            if(crudAdminViewController.verificarLoginAdmin(usuario,contrasenia)){
+
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/marketplaceView.fxml"));
+
+
+                crudAdminViewController.cambiarEstadoLoginAdmin();
+
+
+
+
+                mostrarPestaniaPrincipal(actionEvent);
 
 
             }else{
-                if(modelFactoryController.marketPlace.existenciaVendedor(usuario)){
-                    Vendedor v1 = modelFactoryController.marketPlace.obtenerVendedor(usuario);
+                if(crudVendedorViewController.verificarVendedorExistente(usuario)){
 
-                    FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(getClass().getResource("ventanaAdmin.fxml"));
-                    Parent root = loader.load();
-                    Scene scene = new Scene(root);
-                    //           VendedorView inicioForm = loader.getController();
-                    //inicioForm.init(user,cargoUsuario(user, pass));
-                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                    //stage.setTitle("Tu Finca Raíz | Inicio");
-                    stage.setScene(scene);
+                    if(crudVendedorViewController.verficarLogin(usuario, contrasenia)){
+                        Vendedor vendedorLogin = crudVendedorViewController.obtenerVendedor(usuario);
+                        crudVendedorViewController.asignarVendedorActualModelFactory(vendedorLogin);
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/marketplaceView.fxml"));
+
+                        Parent root = loader.load();
+
+                        modelFactoryController.registrarAccionesSistema("El usuario " +usuario, 1, " Ingreso Login");
+                        mostrarPestaniaPrincipal(actionEvent);
+
+                    }else{
+                        mostrarMensaje("Datos incorrectos", null, "Asegurese de introducir  los datos de su usuario",
+                                Alert.AlertType.ERROR );
+                        try {
+                            throw new AccesoNoAutorizadoException("El acceso no fue autorizado");
+                        }catch (AccesoNoAutorizadoException e){
+                            e.printStackTrace();
+                            modelFactoryController.registrarAccionesSistema(e.toString(), 3, "Ingreso Login");
+                        }
+
+                    }
+
 
                 }else{
-                    mostrarMensaje("Datos incorrectos", null, "Asegurese de introducir todos los datos",
+                    mostrarMensaje("Datos incorrectos", null, "Asegurese de introducir  los datos de su usuario",
                             Alert.AlertType.ERROR );
+                    try {
+                        throw new AccesoNoAutorizadoException("El acceso no fue autorizado");
+                    }catch (AccesoNoAutorizadoException e){
+                        e.printStackTrace();
+                        modelFactoryController.registrarAccionesSistema(e.toString(), 3, "Ingreso Login");
+                    }
+
                 }
 
             }
@@ -96,6 +145,13 @@ public class LoginViewController {
         else {
             mostrarMensaje("Datos de acceso incompletos", null, "Asegurese de introducir todos los datos",
                     Alert.AlertType.ERROR);
+            try {
+                throw new AccesoNoAutorizadoException("El acceso no fue autorizado");
+            }catch (AccesoNoAutorizadoException e){
+                e.printStackTrace();
+                modelFactoryController.registrarAccionesSistema(e.toString(), 3, "Ingreso Login");
+            }
+
         }
 
 
@@ -110,11 +166,6 @@ public class LoginViewController {
         alerta.setAlertType(tipo);
         alerta.show();
     }
-
-
-
-
-
 
 
 
