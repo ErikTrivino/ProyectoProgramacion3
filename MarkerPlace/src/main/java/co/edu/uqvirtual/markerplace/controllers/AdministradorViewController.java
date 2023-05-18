@@ -104,7 +104,7 @@ public class AdministradorViewController {
     @FXML
     void initialize() {
 
-        this.colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        this.colNombre.setCellValueFactory(new PropertyValueFactory<>("nombreee"));
         this.colApellido.setCellValueFactory(new PropertyValueFactory<>("apellido"));
         this.colCedula.setCellValueFactory(new PropertyValueFactory<>("cedula"));
 
