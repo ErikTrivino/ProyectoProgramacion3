@@ -58,6 +58,7 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
         if(hiloActual == hiloServicio2_guardarRegistroLog){
             Persistencia.guardaRegistroLog(mensaje, nivel, accion);
             liberarSemaforo();
+
         }
 
 
@@ -448,6 +449,7 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
     @Override
     public Producto crearProducto(String nombre, String imagen, String precio, Estado estado,String cedulaVendedor) {
         try{
+            obtenerFechaMomento();
            Producto p1 =  this.getMarketPlace().crearProducto(nombre,imagen, precio, estado,cedulaVendedor, fechaMomento);
             guardarDatosArchivos();
             return p1;
@@ -570,7 +572,7 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
 //		guardarBIN.start();
 
     }
-    public ArrayList<Producto> obtenerProductos() {
+    public ArrayList<Producto>  obtenerProductos() {
         ArrayList<Producto> listaProductos = new ArrayList<>();
         if(vendedorActual != null){
             ArrayList<Vendedor> obtenerVendedores = vendedorActual.getListaAliados();
@@ -607,13 +609,14 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
 
     }
 
-    public void agregarTransaccion(Producto productoSeleccionado){
-
-        //BUSCAR NOMBRE VENDEDOR
-        Transaccion transaccion = new Transaccion(String.valueOf( (int) (Math.random() * 900) + 100), fechaMomento,productoSeleccionado.getNombre(),Double.valueOf(productoSeleccionado.getPrecio()), vendedorActual.getNombre(), vendedorActual.getCedula(), "null" );
-
-        this.getMarketPlace().agregarTransaccion(transaccion, vendedorActual, productoSeleccionado);
+    public void crearArchivoEstadisticas(String rutaElegida){
+        String contenido = "";
+        obtenerFechaMomento();
+        Persistencia.guardarArchivoEstadisticas(vendedorActual.getNombre(), fechaMomento, rutaElegida,contenido );
+        //Persistencia.guardarArchivoEstadisticas(getMarketPlace().getAdmin().getNombre(), fechaMomento, rutaElegida,contenido );
     }
+
+
 
 
 

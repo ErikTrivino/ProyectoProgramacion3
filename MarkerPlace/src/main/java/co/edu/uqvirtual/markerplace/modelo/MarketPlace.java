@@ -20,19 +20,13 @@ public class MarketPlace implements IMarketPlaceService, Serializable {
 
     private  ArrayList<Vendedor> listaVendedores = new ArrayList<>();
 
-    private ArrayList<Transaccion> listaTransacionesVendedores = new ArrayList<>();
+
 
     //Kevin
     private Administrador admin;
 
 
-    public ArrayList<Transaccion> getListaTransacionesVendedores() {
-        return listaTransacionesVendedores;
-    }
 
-    public void setListaTransacionesVendedores(ArrayList<Transaccion> listaTransacionesVendedores) {
-        this.listaTransacionesVendedores = listaTransacionesVendedores;
-    }
 
     public Administrador getAdmin() {
         return admin;
@@ -406,14 +400,14 @@ public class MarketPlace implements IMarketPlaceService, Serializable {
     }
 
 
-    public void agregarTransaccion(Transaccion transaccion, Vendedor vendedorComprador, Producto productoCompra) {
-        listaTransacionesVendedores.add(transaccion);
-        int posV = obtenerPosicionVendedor(vendedorComprador.getCedula());
-        listaVendedores.get(posV).getListaTransacciones().add(transaccion);
+
+
+
+
         //Obtener cedulaVendedor de la venta
         //actualizarProducto(productoCompra.getNombre(), productoCompra.getImagen(), productoCompra.getPrecio(), Estado.VENDIDO, );
 
 
 
     }
-}
+

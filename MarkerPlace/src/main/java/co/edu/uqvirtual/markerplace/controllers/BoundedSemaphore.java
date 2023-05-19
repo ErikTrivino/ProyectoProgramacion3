@@ -1,7 +1,7 @@
 package co.edu.uqvirtual.markerplace.controllers;
 
 public class BoundedSemaphore {
-	private int señal = 0;
+	private int senial = 0;
 	private int bound   = 0;
 
 	public BoundedSemaphore(int upperBound){
@@ -9,18 +9,18 @@ public class BoundedSemaphore {
 	}
 
 	public synchronized void ocupar() throws InterruptedException{
-		while(this.señal == bound){
+		while(this.senial == bound){
 			wait();
 		}
-		this.señal++;
+		this.senial++;
 		this.notify();
 	}
 
 	public synchronized void liberar() throws InterruptedException{
-		while(this.señal == 0){
+		while(this.senial == 0){
 			wait();
 		}
-		this.señal--;
+		this.senial--;
 		this.notify();
 	}
 }

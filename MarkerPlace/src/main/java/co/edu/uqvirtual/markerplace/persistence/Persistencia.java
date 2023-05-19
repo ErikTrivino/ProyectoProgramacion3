@@ -5,6 +5,7 @@ import co.edu.uqvirtual.markerplace.modelo.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -32,6 +33,26 @@ public class Persistencia {
 
 
 
+
+
+	public static void guardarArchivoEstadisticas(String nombreUsuario, String fechaMomento, String rutaElegida, String contenido ){
+
+		String nombreArchivo = "reporte_"+fechaMomento+".txt";
+		String archivoEstructura = "";
+		try {
+			FileWriter writer = new FileWriter(rutaElegida+""+nombreArchivo);
+
+			writer.write("Reporte de Listado de Clientes" + "\n");
+			writer.write("Fecha: " + fechaMomento + "\n");
+			writer.write("Reporte realizado por: " + nombreUsuario + "\n\n");
+			writer.write("Información del reporte:\n" + contenido + "\n");
+			writer.close();
+			System.out.println("El archivo se ha exportado correctamente en la siguiente ruta: " + rutaElegida);
+		} catch (IOException e) {
+			System.out.println("Ha ocurrido un error al exportar el archivo: " + e.getMessage());
+		}
+
+	}
 
 
 	public static void copiarArchivoRespaldoVendedor() {

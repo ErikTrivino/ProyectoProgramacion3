@@ -168,6 +168,7 @@ public class MarketplaceViewController {
 
                         modelFactoryController.registrarAccionesSistema("El vendedor "+vendedorLoguado.getNombre()+" esta intentando ingresar al sistema", 1, "Verificar Login");
 
+
                         lbNombre1.setText(vendedorLoguado.getNombre());
                         lblApellido1.setText(vendedorLoguado.getApellido());
                         lblCedula1.setText(vendedorLoguado.getCedula());
