@@ -688,10 +688,10 @@ public class MarketplaceViewController {
         String contenido = "";
 
         for(int i = 0; i < listadoVendedores.size(); i++){
-            contenido +=  listadoVendedores.get(i).getNombre() + " " + listadoVendedores.get(i).getListaProductos().size() + "\n";
+            contenido +=  listadoVendedores.get(i).getNombre() + " " + listadoVendedores.get(i).getApellido() + "\n";
         }
         lblVendedores_cantidadProductos.setText(contenido);
-       // lblVendedores_cantidadContactos.setText(contenido);
+        lblVendedores_cantidadContactos.setText(contenido);
     }
 
     /**
