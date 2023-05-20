@@ -683,4 +683,33 @@ public class MarketplaceViewController {
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(scene);
     }
+
+    /**
+     *
+     * ESTADÍSTICAS
+     *
+     */
+
+    public void llamarVendedorEstadisticas(){
+        String contenido = "";
+
+        for(int i = 0; i < listadoVendedores.size(); i++){
+            contenido +=  listadoVendedores.get(i).getNombre() + " " + listadoVendedores.get(i).getApellido() + "\n";
+        }
+        lblVendedores_cantidadProductos.setText(contenido);
+        lblVendedores_cantidadContactos.setText(contenido);
+    }
+
+    /**
+    public void llamarProductosEstadisticas(){
+        String contenido = "";
+
+        for(int i = 0; i < listadoVendedores.size(); i++){
+            contenido +=  listadoVendedores.get(i).getNombre() + " " + listadoVendedores.get(i).getApellido() + "\n";
+        }
+        lblVendedores_cantidadProductos.setText(contenido);
+        lblVendedores_cantidadContactos.setText(contenido);
+    }
+     */
+
 }
