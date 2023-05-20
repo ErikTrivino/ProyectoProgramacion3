@@ -9,9 +9,7 @@ import javafx.scene.control.Alert;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Optional;
 
 public class ModelFactoryController implements IModelFactoryService, Runnable {
@@ -78,6 +76,15 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
 
     public void setVendedorAutenticado(Vendedor vendedorAutenticado) {
         this.vendedorAutenticado = vendedorAutenticado;
+    }
+
+    public ArrayList<Producto> obtenerProductosVendedor() {
+        if(vendedorActual != null){
+            return vendedorActual.getListaProductos();
+        }else {
+        return new ArrayList<>();
+    }
+
     }
 
     private static class SingletonHolder {
@@ -222,6 +229,12 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
         v2.getListaProductos().add(new Producto("seven up L", "Null", "2000", Estado.PUBLICADO));
         v2.getListaProductos().add(new Producto("tea L", "Null", "2000", Estado.PUBLICADO));
         Vendedor v3= new Vendedor("Vale", "M", "4321", new Usuario("4321", "4321"));
+        Vendedor v2 = new Vendedor("Kevin", "Payanene", "321", new Usuario("321", "321"));
+        v2.getListaProductos().add(new Producto("Soda L", "Null", "2000", Estado.PUBLICADO));
+        v1.getListaProductos().add(new Producto("Menta L", "Null", "120", Estado.PUBLICADO));
+        Vendedor v3= new Vendedor("Valeria", "Mendoza", "4321", new Usuario("4321", "4321"));
+
+
 
         Solicitud s1 =  new Solicitud("Kevin", "1005134113", false);
         v1.getListaSolicitudes().add(s1);
@@ -572,7 +585,7 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
 //		guardarBIN.start();
 
     }
-    public ArrayList<Producto>  obtenerProductos() {
+    public ArrayList<Producto> obtenerProductos() {
         ArrayList<Producto> listaProductos = new ArrayList<>();
         if(vendedorActual != null){
             ArrayList<Vendedor> obtenerVendedores = vendedorActual.getListaAliados();

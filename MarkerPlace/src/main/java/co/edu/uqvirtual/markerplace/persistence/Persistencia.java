@@ -45,7 +45,7 @@ public class Persistencia {
 			writer.write("Reporte de Listado de Clientes" + "\n");
 			writer.write("Fecha: " + fechaMomento + "\n");
 			writer.write("Reporte realizado por: " + nombreUsuario + "\n\n");
-			writer.write("Información del reporte:\n" + contenido + "\n");
+			writer.write("Informaciï¿½n del reporte:\n" + contenido + "\n");
 			writer.close();
 			System.out.println("El archivo se ha exportado correctamente en la siguiente ruta: " + rutaElegida);
 		} catch (IOException e) {
@@ -82,7 +82,7 @@ public class Persistencia {
 		ArchivoUtil.guardarRegistroLog(mensajeLog, nivel, accion, RUTA_ARCHIVO_LOG);
 	}
 //	----------------------SAVES------------------------
-// ------------------------------------SERIALIZACIÓN(BINARIO) y XML
+// ------------------------------------SERIALIZACIï¿½N(BINARIO) y XML
 	/**
 	 * EXPORTAR VENDEDOR EN ARCHIVO DE TEXTO
 	 * @param listVendedores

@@ -1,10 +1,15 @@
 package co.edu.uqvirtual.markerplace.controllers;
 
+
 import co.edu.uqvirtual.markerplace.crud.CrudProductoViewController;
 import co.edu.uqvirtual.markerplace.crud.CrudVendedorViewController;
 import co.edu.uqvirtual.markerplace.exceptions.DatosNulosException;
 import co.edu.uqvirtual.markerplace.exceptions.ErrorCargarDatos;
 import co.edu.uqvirtual.markerplace.exceptions.ProductoNoExiste;
+
+import co.edu.uqvirtual.markerplace.exceptions.DatosNulosException;
+import co.edu.uqvirtual.markerplace.exceptions.ErrorCargarDatos;
+
 import co.edu.uqvirtual.markerplace.exceptions.VendedorNoExisteException;
 import co.edu.uqvirtual.markerplace.modelo.*;
 import javafx.collections.FXCollections;
@@ -59,16 +64,23 @@ public class AgregarProductoViewController {
     private Producto productoSeleccionado;
     ObservableList<Producto> listadoProductos = FXCollections.observableArrayList();
 
+
     ModelFactoryController modelFactoryController;
     CrudVendedorViewController crudVendedorViewController;
     CrudProductoViewController crudProductoViewController;
 
     Vendedor vende ;
 
+    
+
+    Vendedor vende;
+
+
 
 
     @FXML
     void initialize() throws IOException, VendedorNoExisteException {
+
         modelFactoryController = ModelFactoryController.getInstance();
         crudProductoViewController = new CrudProductoViewController(modelFactoryController);
         crudVendedorViewController = new CrudVendedorViewController(modelFactoryController);
@@ -160,16 +172,12 @@ public class AgregarProductoViewController {
                     modelFactoryController.registrarAccionesSistema(e.toString(), 2, "Datos nulos");
                 }
 
-
-
-
-
         }
         return "";
     }
 
     private ObservableList<Producto> obtenerProductos() {
-        listadoProductos.addAll(crudProductoViewController.obtenerProductos(vende.getCedula()));
+        //listadoProductos.addAll(modelFactoryController.obtenerProductos(vende.getCedula()));
         //listadoProductos.addAll(modelFactoryController.obtenerProductos("1234"));
         return listadoProductos;
     }
@@ -191,7 +199,11 @@ public class AgregarProductoViewController {
         if (estado == null || estado.equals("")) {
             mensaje += "La ruta es invalida";
         }
+
         if (crudProductoViewController.verificarProductoExistente(nombre, vende.getCedula()) && productoSeleccionado == null) {
+
+        if (modelFactoryController.verificarProductoExistente(nombre, vende.getCedula()) && productoSeleccionado == null) {
+
             mensaje += "Ya existe un producto con ese nombre";
 
 
@@ -251,7 +263,7 @@ public class AgregarProductoViewController {
 
                 Producto producto = null;
                 //producto = modelFactoryController.crearProducto( nombre, imagen, precio, estado, vendedor);
-                producto = crudProductoViewController.crearProducto(nombre, imagen, precio, estado, vende.getCedula());
+                producto = modelFactoryController.crearProducto( nombre, imagen, precio, estado,vende.getCedula());
                 cargarListadoProductos();
                 if (producto != null) {
                     limpiarCampos();
@@ -294,12 +306,8 @@ public class AgregarProductoViewController {
             if (datosValidos(nombre, imagen, precio, estado)) {
 
 
-
-                try {
-                    crudProductoViewController.eliminarProducto( nombre, vende.getCedula());
-                } catch (ProductoNoExiste e) {
-                    throw new RuntimeException(e);
-                }
+                //producto = modelFactoryController.crearProducto( nombre, imagen, precio, estado, vendedor);
+                modelFactoryController.eliminarProducto( nombre, vende.getCedula());
                 cargarListadoProductos();
                 modelFactoryController.mostrarMensaje("Notificacion Producto", "Producto borrado exitosamente", "Producto borrado", Alert.AlertType.CONFIRMATION);
 
@@ -334,11 +342,7 @@ public class AgregarProductoViewController {
 
 
                 //producto = modelFactoryController.crearProducto( nombre, imagen, precio, estado, vendedor);
-                try {
-                    crudProductoViewController.actualizarProducto( nombre,imagen, precio, estado,vende.getCedula());
-                } catch (ProductoNoExiste e) {
-                    throw new RuntimeException(e);
-                }
+                modelFactoryController.actualizarProducto( nombre,imagen, precio, estado,vende.getCedula());
                 cargarListadoProductos();
                 modelFactoryController.mostrarMensaje("Notificacion Producto", "Producto actualizado exitosamente", "Producto actualizado", Alert.AlertType.CONFIRMATION);
 
@@ -360,7 +364,7 @@ public class AgregarProductoViewController {
 
 
     public void recibirNombre(String lbNombre1) throws VendedorNoExisteException {
-        //vende = modelFactoryController.loginVendedor(lbNombre1);
+        vende = modelFactoryController.loginVendedor(lbNombre1);
         cargarListadoProductos();
     }
 

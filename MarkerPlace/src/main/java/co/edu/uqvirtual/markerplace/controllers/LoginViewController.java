@@ -29,7 +29,6 @@ import java.io.IOException;
 public class LoginViewController {
     ModelFactoryController modelFactoryController = ModelFactoryController.getInstance();
     CrudAdminViewController crudAdminViewController = new CrudAdminViewController(modelFactoryController);
-    CrudVendedorViewController crudVendedorViewController = new CrudVendedorViewController(modelFactoryController);
 
     public void setModelFactoryController(ModelFactoryController modelFactoryController) {
         this.modelFactoryController = modelFactoryController;

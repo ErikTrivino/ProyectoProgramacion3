@@ -29,7 +29,7 @@ public  class ArchivoUtil {
 		try (FileInputStream fis = new FileInputStream(urlArchivo);
 			 FileOutputStream fos = new FileOutputStream(urlDestino, false)) {
 
-			byte[] buffer = new byte[1024]; // Puedes ajustar el tamaño del buffer a tu necesidad
+			byte[] buffer = new byte[1024]; // Puedes ajustar el tamaï¿½o del buffer a tu necesidad
 			int bytesRead;
 			while ((bytesRead = fis.read(buffer)) != -1) {
 				fos.write(buffer, 0, bytesRead);
@@ -160,7 +160,7 @@ public  class ArchivoUtil {
 			mesN+=""+mes;
 		}
 
-		//		fecha_Actual+= año+"-"+mesN+"-"+ diaN;
+		//		fecha_Actual+= aï¿½o+"-"+mesN+"-"+ diaN;
 				//fechaSistema = anio+"-"+mesN+"-"+diaN+"-"+hora+"-"+minuto;
 		fechaSistema = anio+"-"+mesN+"-"+diaN;
 		//		horaFechaSistema = hora+"-"+minuto;
@@ -169,7 +169,7 @@ public  class ArchivoUtil {
 	
 	
 	
-	//------------------------------------SERIALIZACIÓN  y XML
+	//------------------------------------SERIALIZACIï¿½N  y XML
 	/**
 	 * Escribe en el fichero que se le pasa el objeto que se le envia
 	 * 

@@ -9,7 +9,6 @@ public class CrudAdminViewController {
     MarketPlace marketPlace;
 
 
-
     public CrudAdminViewController(ModelFactoryController modelFactoryController) {
         this.modelFactoryController = modelFactoryController;
         marketPlace = modelFactoryController.getMarketPlace();

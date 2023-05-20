@@ -20,6 +20,10 @@ public class Transaccion implements Serializable {
 		this.numeroTransaccion = numeroTransaccion;
 		this.fecha = fecha;
 		this.nombreProducto = nombreProducto;
+	public Transaccion(String numeroTransaccion, String fecha, String hora, Double valor, String nombreVendedor, String cedulaVendedor, String nombreVendedorVenta) {
+		this.numeroTransaccion = numeroTransaccion;
+		this.fecha = fecha;
+		this.hora = hora;
 		this.valor = valor;
 		this.nombreVendedor = nombreVendedor;
 		this.cedulaVendedor = cedulaVendedor;
@@ -77,7 +81,13 @@ public class Transaccion implements Serializable {
 		this.fecha = fecha;
 	}
 
+	public String getHora() {
+		return hora;
+	}
 
+	public void setHora(String hora) {
+		this.hora = hora;
+	}
 
 	public Double getValor() {
 		return valor;

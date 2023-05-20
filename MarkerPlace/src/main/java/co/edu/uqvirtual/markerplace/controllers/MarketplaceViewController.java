@@ -2,14 +2,8 @@ package co.edu.uqvirtual.markerplace.controllers;
 
 import co.edu.uqvirtual.markerplace.crud.CrudAdminViewController;
 import co.edu.uqvirtual.markerplace.crud.CrudVendedorViewController;
-import co.edu.uqvirtual.markerplace.exceptions.DatosNoIngresadosException;
-import co.edu.uqvirtual.markerplace.exceptions.DatosNulosException;
-import co.edu.uqvirtual.markerplace.exceptions.VendedorException;
-import co.edu.uqvirtual.markerplace.exceptions.VendedorNoExisteException;
-import co.edu.uqvirtual.markerplace.modelo.Estado;
-import co.edu.uqvirtual.markerplace.modelo.Producto;
-import co.edu.uqvirtual.markerplace.modelo.Usuario;
-import co.edu.uqvirtual.markerplace.modelo.Vendedor;
+import co.edu.uqvirtual.markerplace.exceptions.*;
+import co.edu.uqvirtual.markerplace.modelo.*;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +28,11 @@ public class MarketplaceViewController {
     public TabPane TabPenaPricipal;
     public Tab tabVendor1;
 
+    public Label lblVendedores_cantidadProductos;
+    public Label lblVendedores_cantidadContactos;
+    public Label lblProductos_top;
+    public Label lblCantidadProductos;
+    public Label lblCantidadChats;
     public Label lbNombre1;
     public Label lblApellido1;
     public Label lblCedula1;
@@ -76,13 +75,14 @@ public class MarketplaceViewController {
     private Usuario usuarioSeleccionado;
     private Vendedor vendedorSeleccionado;//SE DECLARIA UNA VARIABLE DE TIPO VENDEDOR PARA ASIGNAR VENDEDOR SELECCIONADO EN OBSERVABLE LIST
     ObservableList<Vendedor> listadoVendedores = FXCollections.observableArrayList();
+    ObservableList<Vendedor> listadoVendedoresEstadisticas = FXCollections.observableArrayList();
 
 
     //---------------DECLARACION DE RECURSOS DE VISTA
     @FXML
-    private TableView<Producto> tblListaProductosVendedor1;
+    private TableView<Producto> tblListaProductosVendedorAliado;
     @FXML
-    private TableView<Producto> tblListaProductosVendedor11;
+    private TableView<Producto> tblListaProductosVendedorActual;
     @FXML
     private TableColumn<Producto, String> colNombreProducto1;
     @FXML
@@ -139,21 +139,24 @@ public class MarketplaceViewController {
     @FXML
     private Button btnAgregarProductoVendedor1;
 
+    @FXML
+    private TableView<Vendedor> tblVendedoresEstadisticas;
 
+    @FXML
+    private TableColumn<Vendedor, String> colNombreEstadisticas;
 
     boolean logVendedor = false;
 
 
-    public void determinarTabVendedor(){
+    public void determinarTabVendedor() {
 
-       desabilitarTabs();
+        desabilitarTabs();
         int pos = crudVendedorViewController.obtenerPosicionVendedorLog();
 
-        switch (pos){
+        switch (pos) {
             case 0:
-                habilitarTabs();
-                //tabAdministrador.setDisable(false);
-
+                //habilitarTabs();
+                tabAdministrador.setDisable(false);
                 break;
             case 1:
                 logVendedor = true;
@@ -244,7 +247,6 @@ public class MarketplaceViewController {
     }
 
 
-
     private void mostraInformacionvendedor(Vendedor vendedor, Usuario usuario) {
 
         if (vendedor != null) {
@@ -260,7 +262,6 @@ public class MarketplaceViewController {
     }
 
 
-
     @FXML
     void initialize() {
         this.colNombreProducto1.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -271,31 +272,28 @@ public class MarketplaceViewController {
         this.colEstadoProducto11.setCellValueFactory(new PropertyValueFactory<>("estado"));
         this.colPrecioProducto11.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
+        this.colNombreEstadisticas.setCellValueFactory(new PropertyValueFactory<>("nombre"));
 
 
-        tblListaProductosVendedor1.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        tblListaProductosVendedorAliado.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             productoSeleccionado = newSelection;
             //cantidadMegusta.setText(String.valueOf(productoSeleccionado.getListMeGustasProducto().size()));
         });
 
-        tblListaProductosVendedor11.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        tblListaProductosVendedorActual.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             productoSeleccionado = newSelection;
             //cantidadMegusta.setText(String.valueOf(productoSeleccionado.getListMeGustasProducto().size()));
         });
 
-        this.colNombreAliado1.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        this.colApellidoAliado1.setCellValueFactory(new PropertyValueFactory<>("apellido"));
-        tblAliadosVendedor1.getSelectionModel().selectedItemProperty()
+        this.colNombreEstadisticas.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        tblVendedoresEstadisticas.getSelectionModel().selectedItemProperty()
                 .addListener((obs, oldSelection, newSelection) -> {
                     //vendedorAliadoSeleccionado = newSelection;
                 });
 
-
-
         modelFactoryController = ModelFactoryController.getInstance();
         crudAdminViewController = new CrudAdminViewController(modelFactoryController);
         crudVendedorViewController = new CrudVendedorViewController(modelFactoryController);
-
 
 
         this.colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -309,14 +307,19 @@ public class MarketplaceViewController {
             mostraInformacionvendedor(vendedorSeleccionado, usuarioSeleccionado);
 
         });
+
         determinarTabVendedor();
 
-        cargarListadoProductos();
-        cargarListadoProductos11();
+        cargarListadoProductosAliados();
+        cargarListadoProductosActual();
         cargarListadoVendedores();
         cargarListadoVendedoresAliados();
+        cargarListadoVendedoresEstadisticas();
+        llamarVendedorEstadisticas();
+
 
     }
+
     private void cargarListadoVendedoresAliados() {
         tblAliadosVendedor1.getItems().clear();
         tblAliadosVendedor1.setItems(obtenerVendedoresAliados());
@@ -325,27 +328,28 @@ public class MarketplaceViewController {
         listaVendedorAliado.addAll(modelFactoryController.obtenerVendedorAliado());
         return listaVendedorAliado;
     }
+
     private ObservableList<Producto> obtenerProductos() {
-        listadoProductos.addAll(modelFactoryController.obtenerProductos());
-        return listadoProductos;
+        listadoProductosAliados.addAll(modelFactoryController.obtenerProductos());
+        return listadoProductosAliados;
     }
 
     private ObservableList<Producto> obtenerProductos11() {
-        listadoProductos11.addAll(modelFactoryController.obtenerProductos());
-        return listadoProductos11;
+        listadoProductosVendedorActual.addAll(modelFactoryController.obtenerProductosVendedor());
+        return listadoProductosVendedorActual;
     }
 
-    private void cargarListadoProductos() {
-        tblListaProductosVendedor1.getItems().clear();
-        tblListaProductosVendedor1.setItems(obtenerProductos());
+    private void cargarListadoProductosAliados() {
+        tblListaProductosVendedorAliado.getItems().clear();
+        tblListaProductosVendedorAliado.setItems(obtenerProductos());
     }
 
-    private void cargarListadoProductos11() {
-        tblListaProductosVendedor11.getItems().clear();
-        tblListaProductosVendedor11.setItems(obtenerProductos11());
+    private void cargarListadoProductosActual() {
+        tblListaProductosVendedorActual.getItems().clear();
+        tblListaProductosVendedorActual.setItems(obtenerProductos11());
     }
 
-    public void desabilitarTabs(){
+    public void desabilitarTabs() {
         tabAdministrador.setDisable(true);
         tabVendor1.setDisable(true);
         tabVendedor2.setDisable(true);
@@ -353,7 +357,7 @@ public class MarketplaceViewController {
     }
 
 
-    public void habilitarTabs(){
+    public void habilitarTabs() {
         tabAdministrador.setDisable(false);
         tabVendor1.setDisable(false);
         tabVendedor2.setDisable(false);
@@ -366,35 +370,35 @@ public class MarketplaceViewController {
         txtAgregarVende_cedula.setDisable(false);
         //txtAgregarVende_cedula.setEditable(false);
     }
-    private void actualizarVendedor() throws  VendedorException {
+
+    private void actualizarVendedor() throws VendedorException {
 
         String nombre = txtAgregarVende_nombre.getText();
         String apellido = txtAgregarVende_apellido.getText();
         String cedula = txtAgregarVende_cedula.getText();
         String usuario = txtAgregarVende_usuario.getText();
         String contrasenia = txtAgregarVende_contraseña.getText();
-        if(vendedorSeleccionado != null){
-            if (datosValidos(nombre,apellido ,cedula, usuario, contrasenia)) {
+        if (vendedorSeleccionado != null) {
+            if (datosValidos(nombre, apellido, cedula, usuario, contrasenia)) {
 
-                modelFactoryController.actualizarVendedor(nombre, apellido,cedula,usuario,contrasenia);
+                modelFactoryController.actualizarVendedor(nombre, apellido, cedula, usuario, contrasenia);
 
                 modelFactoryController.mostrarMensaje("Notificacion Vendedor", "Vendedor Actualizado", "El Vendedor ha sido actualizado",
                         Alert.AlertType.INFORMATION);
 
-                modelFactoryController.registrarAccionesSistema("El vendedor"+nombre+ "actualizado", 1, "Actualizar vendedor");
+                modelFactoryController.registrarAccionesSistema("El vendedor" + nombre + "actualizado", 1, "Actualizar vendedor");
                 cargarListadoVendedores();
                 tblListaVendedores_agregarVendedor.refresh();
                 limpiarDatos();
-            }else {
+            } else {
                 try {
                     throw new DatosNulosException("Datos nulos al agregar producto");
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     modelFactoryController.registrarAccionesSistema(e.toString(), 2, "Datos nulos");
                 }
             }
-        }
-        else {
+        } else {
             modelFactoryController.registrarAccionesSistema("El vendedor no fue seleccionado", 2, "Seleccionar vendedor");
             modelFactoryController.mostrarMensaje("Notificacion vendedor", "vendedor no seleccionado",
                     "n", Alert.AlertType.WARNING);
@@ -408,7 +412,7 @@ public class MarketplaceViewController {
 
     }
 
-    private void guardarVendedor() throws DatosNulosException, IOException  {
+    private void guardarVendedor() throws DatosNulosException, IOException {
         String nombre = txtAgregarVende_nombre.getText();
         String apellido = txtAgregarVende_apellido.getText();
         String cedula = txtAgregarVende_cedula.getText();
@@ -419,7 +423,7 @@ public class MarketplaceViewController {
             if (datosValidos(nombre, apellido, cedula, usuario, contracenia)) {
 
                 Vendedor vendedor1 = null;
-                vendedor1 = modelFactoryController.crearVendedor( nombre, apellido, cedula, usuario, contracenia);
+                vendedor1 = modelFactoryController.crearVendedor(nombre, apellido, cedula, usuario, contracenia);
                 cargarListadoVendedores();
                 if (vendedor1 != null) {
                     limpiarDatos();
@@ -431,11 +435,11 @@ public class MarketplaceViewController {
                             Alert.AlertType.INFORMATION);
                 }
 
-            }else{
+            } else {
                 try {
                     throw new DatosNulosException("Datos nulos al agregar producto");
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     modelFactoryController.registrarAccionesSistema(e.toString(), 2, "Datos nulos");
                 }
             }
@@ -461,16 +465,16 @@ public class MarketplaceViewController {
         lblCedula2.setText("");
 
 
-
     }
+
     @FXML
     void eliminarVende_agregarVendedorAction(ActionEvent event) throws VendedorNoExisteException, IOException, VendedorException {
         eliminarVendedor();
         txtAgregarVende_cedula.setDisable(false);
 
 
-
     }
+
     private void eliminarVendedor() throws VendedorNoExisteException, IOException, VendedorException {
 
         if (vendedorSeleccionado != null) {
@@ -501,10 +505,22 @@ public class MarketplaceViewController {
         tblListaVendedores_agregarVendedor.getItems().clear();
         tblListaVendedores_agregarVendedor.setItems(obtenerVendedores());
     }
+
+    private void cargarListadoVendedoresEstadisticas() {
+        tblVendedoresEstadisticas.getItems().clear();
+        tblVendedoresEstadisticas.setItems(obtenerVendedoresEstadisticas());
+    }
+
     private ObservableList<Vendedor> obtenerVendedores() {
         listadoVendedores.addAll(modelFactoryController.obtenerVendedores());
         return listadoVendedores;
     }
+
+    private ObservableList<Vendedor> obtenerVendedoresEstadisticas() {
+        listadoVendedoresEstadisticas.addAll(modelFactoryController.obtenerVendedores());
+        return listadoVendedoresEstadisticas;
+    }
+
     private boolean datosValidos(String nombre, String apellido, String cedula, String usuario,
                                  String contrasenia) {
 
@@ -525,11 +541,11 @@ public class MarketplaceViewController {
         if (contrasenia == null || contrasenia.equals("") || contrasenia.isEmpty()) {
             mensaje += "la contrasenia es invalido";
         }
-        try{
+        try {
             if (modelFactoryController.verificarVendedorExistente(cedula) && vendedorSeleccionado == null) {
                 mensaje += "Ya existe un vendedor con  documento";
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             modelFactoryController.registrarAccionesSistema(e.getMessage(), 2, "Insertar datos");
         }
 
@@ -557,7 +573,8 @@ public class MarketplaceViewController {
         return false;
     }
 
-    /**Código del tab de
+    /**
+     * Código del tab de
      * vendedor 1
      */
 
@@ -567,10 +584,9 @@ public class MarketplaceViewController {
         loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/agregarProductoView.fxml"));
 
 
-
         Parent root = loader.load();
         AgregarProductoViewController agregarProductoViewController = loader.getController();
-        if(lbNombre1.getText() != null){
+        if (lbNombre1.getText() != null) {
 
         }
         agregarProductoViewController.recibirNombre(lbNombre1.getText());
@@ -588,7 +604,7 @@ public class MarketplaceViewController {
     }
 
     @FXML
-    void comentarios_vendedor1ViewAction(ActionEvent actionEvent) throws IOException{
+    void comentarios_vendedor1ViewAction(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/comentariosView.fxml"));
 
@@ -618,7 +634,7 @@ public class MarketplaceViewController {
     }
 
     @FXML
-    void iniciarCharla_vendedor1ViewAction(ActionEvent actionEvent) throws IOException{
+    void iniciarCharla_vendedor1ViewAction(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/chatView.fxml"));
 
@@ -629,7 +645,7 @@ public class MarketplaceViewController {
     }
 
     @FXML
-    void verProductosAliados_vendedir1ViewAction(ActionEvent actionEvent) throws IOException{
+    void verProductosAliados_vendedir1ViewAction(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/verProductosAliadoView.fxml"));
 
@@ -647,10 +663,10 @@ public class MarketplaceViewController {
 
     public void salir(ActionEvent actionEvent) {
 
-        if(logVendedor){
+        if (logVendedor) {
             modelFactoryController.getMarketPlace().quitarEstadoLogin();
             logVendedor = false;
-        }else{
+        } else {
             crudAdminViewController.cambiarEstadoLoginAdmin();
         }
 
