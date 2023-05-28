@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<TabPane fx:id="tabPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="747.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uqvirtual.markerplace.controllers.MarketplaceViewController">
+<TabPane fx:id="tabPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="747.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uqvirtual.markerplace.controllers.MarketplaceViewController">
    <tabs>
 
       <Tab fx:id="tabAdministrador" text="Administrador">
@@ -127,7 +119,7 @@
                                                       <Font name="System Bold" size="18.0" />
                                                    </font>
                                                 </Label>
-                                                <Button layoutX="296.0" layoutY="450.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="126.0" style="-fx-background-color: #3b5998;" text="Generar reporte" textFill="WHITE">
+                                                <Button layoutX="296.0" layoutY="450.0" mnemonicParsing="false" onAction="#generarExportacionEstadisticas" prefHeight="29.0" prefWidth="126.0" style="-fx-background-color: #3b5998;" text="Generar reporte" textFill="WHITE">
                                                    <font>
                                                       <Font name="Franklin Gothic Book" size="15.0" />
                                                    </font>
@@ -145,7 +137,7 @@
                                                       <TextField fx:id="txtVendedor2_estadisticas" layoutX="272.0" layoutY="90.0" promptText="Ingrese el vendedor 2" />
                                                       <Label layoutX="223.0" layoutY="174.0" prefHeight="17.0" prefWidth="97.0" text="Número de chats:" />
                                                       <Label fx:id="lblCantidadChats" layoutX="335.0" layoutY="174.0" prefHeight="17.0" prefWidth="41.0" />
-                                                      <Button fx:id="btnCalcularChats" layoutX="253.0" layoutY="132.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="126.0" style="-fx-background-color: #3b5998;" text="Calcular chats" textFill="WHITE">
+                                                      <Button fx:id="btnCalcularChats" layoutX="253.0" layoutY="132.0" mnemonicParsing="false" onAction="#calcularChatsVendedores" prefHeight="29.0" prefWidth="126.0" style="-fx-background-color: #3b5998;" text="Calcular chats" textFill="WHITE">
                                                          <font>
                                                             <Font name="Franklin Gothic Book" size="15.0" />
                                                          </font>
@@ -164,16 +156,17 @@
                                                             <Font name="System Bold" size="14.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="btnFecha_estadisticas" layoutX="40.0" layoutY="58.0" promptText="Ingrese la fecha" />
                                                       <Label layoutX="14.0" layoutY="35.0" prefWidth="95.0" text="Ingrese la fecha:" />
                                                       <Label layoutX="16.0" layoutY="165.0" prefHeight="17.0" prefWidth="79.0" text="Se publicaron" />
                                                       <Label fx:id="lblCantidadProductos" layoutX="95.0" layoutY="165.0" prefHeight="17.0" prefWidth="41.0" />
                                                       <Label layoutX="139.0" layoutY="165.0" prefHeight="17.0" prefWidth="76.0" text="productos" />
-                                                      <Button fx:id="btnCalcularProductos_fecha" layoutX="53.0" layoutY="113.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="126.0" style="-fx-background-color: #3b5998;" text="Calcular" textFill="WHITE">
+                                                      <Button fx:id="btnCalcularProductos_fecha" layoutX="51.0" layoutY="126.0" mnemonicParsing="false" onAction="#calcularCatidadProductosFecha" prefHeight="29.0" prefWidth="126.0" style="-fx-background-color: #3b5998;" text="Calcular" textFill="WHITE">
                                                          <font>
                                                             <Font name="Franklin Gothic Book" size="15.0" />
                                                          </font>
                                                       </Button>
+                                                      <DatePicker fx:id="dataPicker2" layoutX="21.0" layoutY="85.0" />
+                                                      <DatePicker fx:id="dataPicker1" layoutX="21.0" layoutY="53.0" />
                                                    </children>
                                                 </AnchorPane>
                                                 <AnchorPane layoutX="244.0" layoutY="243.0" prefHeight="196.0" prefWidth="229.0" style="-fx-border-color: #A8A8A8;">
@@ -184,56 +177,7 @@
                                                          </font>
                                                       </Label>
                                                       <Label fx:id="lblVendedores_cantidadContactos" alignment="TOP_LEFT" layoutX="14.0" layoutY="24.0" prefHeight="166.0" prefWidth="95.0" />
-                                                      <Label layoutX="195.0" layoutY="24.0" prefWidth="20.0" text="1" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="41.0" prefWidth="20.0" text="2" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="58.0" prefWidth="20.0" text="3" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="75.0" prefWidth="20.0" text="4" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="92.0" prefWidth="20.0" text="5" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="109.0" prefWidth="20.0" text="5" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="126.0" prefWidth="20.0" text="7" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="143.0" prefWidth="20.0" text="8" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="160.0" prefWidth="20.0" text="9" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="195.0" layoutY="177.0" prefWidth="20.0" text="10" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
+                                                      <Label fx:id="lblVendedores_cantidadContactos1" alignment="TOP_LEFT" layoutX="180.0" layoutY="24.0" prefHeight="166.0" prefWidth="30.0" />
                                                    </children>
                                                 </AnchorPane>
                                                 <AnchorPane layoutX="473.0" layoutY="243.0" prefHeight="196.0" prefWidth="229.0" style="-fx-border-color: #A8A8A8;">
@@ -244,106 +188,8 @@
                                                          </font>
                                                       </Label>
                                                       <Label fx:id="lblProductos_top" alignment="TOP_LEFT" layoutX="67.0" layoutY="24.0" prefHeight="166.0" prefWidth="95.0" />
-                                                      <Label layoutX="20.0" layoutY="24.0" prefWidth="13.0" text="1">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="41.0" prefWidth="13.0" text="2">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="58.0" prefWidth="13.0" text="3">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="75.0" prefWidth="13.0" text="4">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="92.0" prefWidth="13.0" text="5">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="109.0" prefWidth="13.0" text="6">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="126.0" prefWidth="13.0" text="7">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="143.0" prefWidth="13.0" text="8">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="160.0" prefWidth="13.0" text="9">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="20.0" layoutY="177.0" prefWidth="13.0" text="10">
-                                                         <font>
-                                                            <Font name="System Bold" size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="24.0" prefWidth="20.0" text="1" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="41.0" prefWidth="20.0" text="2" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="58.0" prefWidth="20.0" text="3" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="75.0" prefWidth="20.0" text="4" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="92.0" prefWidth="20.0" text="5" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="109.0" prefWidth="20.0" text="5" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="126.0" prefWidth="20.0" text="7" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="143.0" prefWidth="20.0" text="8" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="160.0" prefWidth="20.0" text="9" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="193.0" layoutY="177.0" prefWidth="20.0" text="10" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
+                                                      <Label fx:id="lblVendedores_ProductosTop" alignment="TOP_LEFT" layoutX="11.0" layoutY="24.0" prefHeight="166.0" prefWidth="95.0" />
+                                                      <Label fx:id="lblVendedores_ProductosTop1" alignment="TOP_LEFT" layoutX="128.0" layoutY="24.0" prefHeight="166.0" prefWidth="95.0" />
                                                    </children>
                                                 </AnchorPane>
                                                 <AnchorPane layoutX="15.0" layoutY="243.0" prefHeight="196.0" prefWidth="229.0" style="-fx-border-color: #A8A8A8;">
@@ -353,57 +199,8 @@
                                                             <Font name="System Bold" size="14.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="lblVendedores_cantidadProductos" alignment="TOP_LEFT" layoutX="14.0" layoutY="24.0" prefHeight="166.0" prefWidth="95.0" />
-                                                      <Label layoutX="190.0" layoutY="24.0" prefWidth="20.0" text="1" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="41.0" prefWidth="20.0" text="2" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="58.0" prefWidth="20.0" text="3" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="75.0" prefWidth="20.0" text="4" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="92.0" prefWidth="20.0" text="5" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="109.0" prefWidth="20.0" text="5" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="126.0" prefWidth="20.0" text="7" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="143.0" prefWidth="20.0" text="8" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="160.0" prefWidth="20.0" text="9" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="190.0" layoutY="177.0" prefWidth="20.0" text="10" textAlignment="CENTER">
-                                                         <font>
-                                                            <Font size="11.0" />
-                                                         </font>
-                                                      </Label>
+                                                      <Label fx:id="lblVendedores_cantidadProductos" alignment="TOP_LEFT" layoutX="14.0" layoutY="29.0" prefHeight="166.0" prefWidth="102.0" />
+                                                      <Label fx:id="lblVendedores_cantidadProductos1" alignment="TOP_LEFT" layoutX="173.0" layoutY="29.0" prefHeight="166.0" prefWidth="34.0" AnchorPane.bottomAnchor="2.1999999999999886" />
                                                    </children>
                                                 </AnchorPane>
                                              </children>
@@ -553,7 +350,7 @@
                                                                   <TableView fx:id="tblAliadosVendedor1" layoutX="22.0" layoutY="45.0" prefHeight="168.0" prefWidth="478.0" style="-fx-background-color: #E4F4FF;">
                                                                      <columns>
                                                                         <TableColumn fx:id="colNombreAliado1" prefWidth="238.0" text="Nombre" />
-                                                                        <TableColumn fx:id="colApellidoAliado1" prefWidth="238.0" text="Apellido" />
+                                                                        <TableColumn fx:id="colIdentificacionAliado1" prefWidth="238.0" text="Identificación" />
                                                                      </columns>
                                                                   </TableView>
                                                                   <Button fx:id="btnGestionarAliados_vendedor1" alignment="CENTER" layoutX="522.0" layoutY="116.0" mnemonicParsing="false" onAction="#gestionarAliados_vendedor1ViewAction" prefHeight="20.0" prefWidth="150.0" style="-fx-background-color: #3b5998;" text="Gestionar aliados" textFill="WHITE">

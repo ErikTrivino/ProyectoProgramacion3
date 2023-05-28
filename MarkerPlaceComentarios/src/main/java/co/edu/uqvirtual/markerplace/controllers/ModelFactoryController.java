@@ -9,12 +9,16 @@ import javafx.scene.control.Alert;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Optional;
 
 public class ModelFactoryController implements IModelFactoryService, Runnable {
     MarketPlace marketPlace;
     Vendedor vendedorActual;
+    Producto productoActual1;
 
     Thread hiloServicio1_guardarResourceXml;
     Thread hiloServicio2_guardarRegistroLog;
@@ -29,12 +33,19 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
     private Vendedor vendedorAutenticado;
     String fechaMomento;
 
+
+
     public Vendedor getVendedorActual() {
         return vendedorActual;
     }
-
     public void setVendedorActual(Vendedor vendedorActual) {
         this.vendedorActual = vendedorActual;
+    }
+    public Producto getProductoActual1(){
+        return productoActual1 ;
+    }
+    public void setProductoActual1(Producto productoActual1){
+        this.productoActual1 = productoActual1;
     }
 
     @Override
@@ -87,6 +98,78 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
 
     }
 
+    public ArrayList<Producto> obtenerTopProductos() {
+        ArrayList<Producto> productosTotales = new ArrayList<>();
+
+        for (Vendedor v:this.getMarketPlace().getListVendedores()
+             ) {
+            productosTotales.addAll(v.getListaProductos());
+        }
+
+
+        ArrayList<Producto> productosOrdenados = new ArrayList<>(productosTotales);
+
+        productosOrdenados.sort((p1, p2) -> Integer.compare(p2.getListaMeGustaProducto().size(), p1.getListaMeGustaProducto().size()));
+
+
+        return  productosOrdenados;
+    }
+
+    public int calcularChatsVendedores(String nombre1, String nombre2) {
+
+        Vendedor vendedor1 = obtenerVendedorPorNombre(nombre1);
+        Vendedor vendedor2 = obtenerVendedorPorNombre(nombre2);
+
+        int contador = 0;
+
+        for (Chat chat:vendedor1.getListaChat()
+             ) {
+            if(chat.getVendedor().getNombre().equals(vendedor2.getNombre())){
+                contador++;
+            }
+        }
+        return contador;
+
+    }
+
+    private Vendedor obtenerVendedorPorNombre(String nombre) {
+
+
+        return this.getMarketPlace().obtenerVendedorLogin(nombre);
+    }
+
+    public String obtenerCantidadProductosPorFecha(LocalDateTime selectedDateTime1, LocalDateTime selectedDateTime2) {
+        int cantidad = 0;
+        ArrayList<Producto> productosTotales = new ArrayList<>();
+
+        for (Vendedor v:this.getMarketPlace().getListVendedores()
+        ) {
+            productosTotales.addAll(v.getListaProductos());
+        }
+
+        for (Producto producto : productosTotales) {
+
+            LocalDateTime fechaPublicacion = producto.obtenerFechaMomento();
+            if (fechaPublicacion.isAfter(selectedDateTime1) && fechaPublicacion.isBefore(selectedDateTime2)) {
+                cantidad++;
+            }
+
+        }
+
+
+
+        return String.valueOf(cantidad);
+    }
+
+    public void aceptarSolicitud(Solicitud solicitud) {
+        try {
+            this.getMarketPlace().aceptarSolicitud(solicitud, vendedorActual);
+            guardarDatosArchivos();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
     private static class SingletonHolder {
         // El constructor de Singleton puede ser llamado desde aquí al ser protected
         private final static ModelFactoryController eINSTANCE = new ModelFactoryController();
@@ -230,16 +313,21 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
         v2.getListaProductos().add(new Producto("tea L", "Null", "2000", Estado.PUBLICADO));
         Vendedor v3= new Vendedor("Vale", "M", "4321", new Usuario("4321", "4321"));
         Vendedor v2 = new Vendedor("Kevin", "Payanene", "321", new Usuario("321", "321"));
-        v2.getListaProductos().add(new Producto("Soda L", "Null", "2000", Estado.PUBLICADO));
-        v1.getListaProductos().add(new Producto("Menta L", "Null", "120", Estado.PUBLICADO));
         Vendedor v3= new Vendedor("Valeria", "Mendoza", "4321", new Usuario("4321", "4321"));
 
+        v1.getListaChat().add(new Chat(v2, "Holaaa"));
+        obtenerFechaMomento();
+        v2.getListaProductos().add(new Producto("Soda L", "Null", "2000", Estado.PUBLICADO,fechaMomento ));
+        v1.getListaProductos().add(new Producto("Menta L", "Null", "120", Estado.PUBLICADO, fechaMomento));
 
 
-        Solicitud s1 =  new Solicitud("Kevin", "1005134113", false);
+        Solicitud s1 =  new Solicitud("Kevin", "321", false);
         v1.getListaSolicitudes().add(s1);
+        s1.setVendedorEnviado(v2);
+        v2.getListaAliados().add(v3);
 
-        v1.getListaAliados().add(v2);
+        //v1.getListaAliados().add(v2);
+
 
         marketPlace.getListVendedores().add(v1);
         marketPlace.getListVendedores().add(v2);
@@ -474,6 +562,19 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
         }
 
     }
+    //Falta curd Imagino
+    public Comentario crearComentario(Vendedor vendedorEnviado, Producto productoComentado, String nombre, String identificacion, String comentario) {
+        try {
+            Comentario c1 = this.getMarketPlace().crearComentario(vendedorEnviado, productoComentado, nombre, identificacion, comentario);
+
+            return c1;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 
     @Override
     public void actualizarProducto(String nombre, String imagen, String precio, Estado estado,String cedulaVendedor) {
@@ -612,6 +713,39 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
         }
 
     }
+    //
+    public ArrayList<Vendedor> obtenerVendedoresSugeridos() {
+        ArrayList<Vendedor> listaVendedoresSugeridos = new ArrayList<>();
+        if(vendedorActual != null){
+            ArrayList<Vendedor> obtenerVendedores = vendedorActual.getListaAliados();
+            listaVendedoresSugeridos.addAll(obtenerVendedores);
+            for (Vendedor vendedor : obtenerVendedores) {
+                for (Vendedor vendedorAliado : vendedor.getListaAliados() )
+                    if(vendedorAliado != vendedorActual){
+                        for (Vendedor vendedor2 : listaVendedoresSugeridos){
+                            if (vendedorAliado != vendedor2){
+                                listaVendedoresSugeridos.add(vendedorAliado);
+                            }
+                        }
+                    }
+            }
+            return listaVendedoresSugeridos;
+        }else{
+            return listaVendedoresSugeridos;
+        }
+    }
+    public static boolean verificarRepetidos(ArrayList<Vendedor> lista) {
+        HashSet<Vendedor> conjunto = new HashSet<>();
+
+        for (Vendedor vendedor : lista) {
+            if (conjunto.contains(vendedor)) {
+                return true; // Elemento repetido encontrado
+            }
+            conjunto.add(vendedor);
+        }
+
+        return false; // No se encontraron elementos repetidos
+    }
 
     public ArrayList<Vendedor> obtenerVendedorAliado() {
         if(vendedorActual != null){
@@ -622,10 +756,10 @@ public class ModelFactoryController implements IModelFactoryService, Runnable {
 
     }
 
-    public void crearArchivoEstadisticas(String rutaElegida){
-        String contenido = "";
+    public void crearArchivoEstadisticas(String rutaElegida, String contenido){
+
         obtenerFechaMomento();
-        Persistencia.guardarArchivoEstadisticas(vendedorActual.getNombre(), fechaMomento, rutaElegida,contenido );
+        Persistencia.guardarArchivoEstadisticas(this.getMarketPlace().getAdmin().getNombre(), fechaMomento, rutaElegida,contenido );
         //Persistencia.guardarArchivoEstadisticas(getMarketPlace().getAdmin().getNombre(), fechaMomento, rutaElegida,contenido );
     }
 

@@ -15,15 +15,17 @@ public class Comentario implements Serializable {
 	private Vendedor vendedorEnviado;
 	private Producto productoComentado;
 	private String nombre;
-	private String apellido;
+	private String identificacion;
 	private String comentario;
 	public Comentario() {
 
 	}
 
-	public Comentario(Vendedor vendedorEnviado, Producto productoComentado, String comentario) {
+	public Comentario(Vendedor vendedorEnviado, Producto productoComentado, String nombre, String identificacion, String comentario) {
 		this.vendedorEnviado = vendedorEnviado;
 		this.productoComentado = productoComentado;
+		this.nombre = nombre;
+		this.identificacion = identificacion;
 		this.comentario = comentario;
 	}
 
@@ -54,12 +56,12 @@ public class Comentario implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public String getApellido() {
-		return apellido;
+	public String getIdentetificacion() {
+		return identificacion;
 	}
 
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
+	public void setIdentificacion(String identificacion) {
+		this.identificacion = identificacion;
 	}
 
 

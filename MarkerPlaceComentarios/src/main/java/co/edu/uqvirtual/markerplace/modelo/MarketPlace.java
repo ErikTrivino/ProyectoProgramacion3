@@ -162,12 +162,31 @@ public class MarketPlace implements IMarketPlaceService, Serializable {
         int pos = obtenerPosicionSolicitud(cedula, vendedorActual);
         vendedorActual.getListaSolicitudes().remove(pos);
     }
+    public void aceptarSolicitud(Solicitud solicitud, Vendedor vendedorActual) {
+        int posicionVendedor = obtenerPosicionVendedor(solicitud.getCedula());
+        int posicionSolicitud = obtenerPosicionSolicitud(solicitud.getCedula(), vendedorActual);
+
+
+        vendedorActual.getListaAliados().add(listaVendedores.get(posicionVendedor));
+        vendedorActual.getListaAliados().add(solicitud.getVendedorEnviado());
+        vendedorActual.getListaSolicitudes().remove(posicionSolicitud);
+
+        solicitud.getVendedorEnviado().getListaAliados().add(vendedorActual);
+
+
+
+    }
 
     @Override
     public Vendedor obtenerVendedor(String nombreUsuario) throws VendedorNoExisteException {
        // return new Vendedor("Diego", "Jimenez", "1234", new Usuario("1234", "1234"));
 
         return listaVendedores.stream().filter(x -> x.getUsuario().getNombreUsuario().equals(nombreUsuario)).findFirst().get();
+    }
+    public Vendedor obtenerVendedorPorNombre(String nombreVendedor) throws VendedorNoExisteException {
+        // return new Vendedor("Diego", "Jimenez", "1234", new Usuario("1234", "1234"));
+
+        return listaVendedores.stream().filter(x -> x.getNombre().equals(nombreVendedor)).findFirst().get();
     }
 
     @Override
@@ -187,6 +206,13 @@ public class MarketPlace implements IMarketPlaceService, Serializable {
 
         return  p1;
     }
+
+    public Comentario crearComentario(Vendedor vendedorEnviado, Producto productoComentado, String nombre, String identificacion, String comentario){
+        Comentario c1 = new Comentario( vendedorEnviado, productoComentado, nombre, identificacion, comentario);
+
+        return c1;
+    }
+
 
     @Override
     public void actualizarProducto(String nombre, String imagen, String precio, Estado estado,String cedulaVendedor) throws DatosNulosException, ProductoNoExiste {
@@ -339,6 +365,8 @@ public class MarketPlace implements IMarketPlaceService, Serializable {
         chatVendedores.setVendedor(vendedorSelecionado);
         chatVendedores.setMiChat(chat);
     }
+
+
 
     public void agregarMeGustaProducto(Producto productoSeleccionado, Vendedor vendedorActual) {
         boolean encontroMegustaActual = false;

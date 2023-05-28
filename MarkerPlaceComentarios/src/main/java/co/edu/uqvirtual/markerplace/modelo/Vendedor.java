@@ -15,6 +15,7 @@ public class Vendedor extends Persona implements Serializable {
     private  ArrayList<Solicitud>listaSolicitudes;
     private  ArrayList<Solicitud>listaSolicitudesEnivadas;
     private ArrayList<Transaccion> listaTransacciones;
+    private ArrayList<Comentario> listaComentarios;
 
     public Vendedor() {
     }
@@ -28,6 +29,7 @@ public class Vendedor extends Persona implements Serializable {
         listaSolicitudes = new ArrayList<>();
         listaSolicitudesEnivadas = new ArrayList<>();
         listaTransacciones = new ArrayList<>();
+        listaComentarios = new ArrayList<>();
         this.usuario = usuario;
 
     }
@@ -93,5 +95,13 @@ public class Vendedor extends Persona implements Serializable {
 
     public void setListaTransacciones(ArrayList<Transaccion> listaTransacciones) {
         this.listaTransacciones = listaTransacciones;
+    }
+
+    public ArrayList<Comentario> getListaComentarios() {
+        return listaComentarios;
+    }
+
+    public void setListaComentarios(ArrayList<Comentario> listaComentarios) {
+        this.listaComentarios = listaComentarios;
     }
 }

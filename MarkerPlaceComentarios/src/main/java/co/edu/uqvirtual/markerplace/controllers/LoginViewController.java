@@ -29,6 +29,7 @@ import java.io.IOException;
 public class LoginViewController {
     ModelFactoryController modelFactoryController = ModelFactoryController.getInstance();
     CrudAdminViewController crudAdminViewController = new CrudAdminViewController(modelFactoryController);
+    CrudVendedorViewController crudVendedorViewController = new CrudVendedorViewController(modelFactoryController);
 
     public void setModelFactoryController(ModelFactoryController modelFactoryController) {
         this.modelFactoryController = modelFactoryController;
@@ -80,8 +81,6 @@ public class LoginViewController {
         String contrasenia=txtContraseña_loginView.getText();
         Vendedor vendedor=null;
 
-
-
         if (!(usuario.equals("") && contrasenia.equals(""))){
 
             if(crudAdminViewController.verificarLoginAdmin(usuario,contrasenia)){
@@ -89,14 +88,9 @@ public class LoginViewController {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/marketplaceView.fxml"));
 
-
                 crudAdminViewController.cambiarEstadoLoginAdmin();
 
-
-
-
                 mostrarPestaniaPrincipal(actionEvent);
-
 
             }else{
                 if(crudVendedorViewController.verificarVendedorExistente(usuario)){

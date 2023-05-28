@@ -24,6 +24,11 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 public class GestionarAliadosControllerViewController {
+    @FXML
+    public TextField txtGestionarAliados_buscarSugerencias;
+    @FXML
+    public Label lbIdentificador;
+
     ModelFactoryController modelFactoryController = ModelFactoryController.getInstance();
 
     private Application application;
@@ -38,6 +43,14 @@ public class GestionarAliadosControllerViewController {
     private TableColumn<Vendedor,String> colNombreSolicitud;
     @FXML
     private TableColumn<Vendedor, String> colApellidoSolicitud;
+    //Tabla de sugeridos
+    @FXML
+    private TableView<Vendedor> tblSugerenciasAmistad_gestionarAliados;
+    @FXML
+    private TableColumn<Vendedor, String> colNomSugerencia;
+    @FXML
+    private TableColumn<Vendedor, String> colNomIdentificacion;
+
 
     //Botones
     @FXML
@@ -56,27 +69,42 @@ public class GestionarAliadosControllerViewController {
     //-------Instancias de los vendedores--------
     Vendedor vendedor;
     Solicitud solicitudSelecionada;
+    Vendedor vendedorSelecionado;
 
     ArrayList<Vendedor> vendedoresMarketPlace = modelFactoryController.getMarketPlace().getListVendedores();
 
     //-------Obvervables
     ObservableList<Solicitud> listaSolicitudes = FXCollections.observableArrayList();
     ObservableList<Vendedor> listadoVendedoresSugeridos = FXCollections.observableArrayList();
+    ObservableList<Vendedor> listadoVendedores = FXCollections.observableArrayList();
+
 
     @FXML
     void initialize() throws IOException {
         this.colNombreSolicitud.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         this.colApellidoSolicitud.setCellValueFactory(new PropertyValueFactory<>("cedula"));
 
+        //this.colNomSugerencia.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        //this.colNomIdentificacion.setCellValueFactory(new PropertyValueFactory<>("cedula"));
+
         tblSolicitudesAmistad_gestionarAliados.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             solicitudSelecionada = newSelection;
 
         });
-        vendedor = modelFactoryController.getVendedorAutenticado();
+
+        tblSugerenciasAmistad_gestionarAliados.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection)-> {
+            vendedorSelecionado = newSelection;
+        });
+
+        vendedor = modelFactoryController.getVendedorActual();
         cargarListaSolicitudes();
+        cargarListaSolicitudesSugeridas();
     }
+
+
+
     @FXML
-    void salirGestionarComentariosAction(ActionEvent actionEvent) throws IOException {
+    void salirGestionarAliadossAction(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/marketplaceView.fxml"));
         Parent root = loader.load();
@@ -89,16 +117,45 @@ public class GestionarAliadosControllerViewController {
         tblSolicitudesAmistad_gestionarAliados.getItems().clear();
         tblSolicitudesAmistad_gestionarAliados.setItems(obtenerSolicitudes());
     }
-    //Kevin Agrego
+    private void cargarListaSolicitudesSugeridas() {
+        tblSugerenciasAmistad_gestionarAliados.getItems().clear();
+        tblSugerenciasAmistad_gestionarAliados.setItems(obtenerSolicitudesSugeridas());
+    }
     private ObservableList<Solicitud> obtenerSolicitudes() {
         listaSolicitudes.addAll(vendedor.getListaSolicitudes());
         return listaSolicitudes;
+    }
+    private ObservableList<Vendedor> obtenerSolicitudesSugeridas() {
+        listadoVendedoresSugeridos.addAll(vendedor.getListaAliados());
+        return listadoVendedoresSugeridos;
     }
     @FXML
     public void btnRechazarAction(ActionEvent actionEvent) throws DatosNulosException, VendedorException, VendedorNoExisteException, IOException {
         eliminarSolicitud();
         cargarListaSolicitudes();
     }
+    @FXML
+    public void btnAceptarGestionarAliadosAction(ActionEvent actionEvent) {
+        aceptarSolicitud();
+        cargarListaSolicitudes();
+    }
+
+    private void aceptarSolicitud() {
+        if(solicitudSelecionada != null){
+            if (mostrarMensajeConfirmacion("¿ Esta seguro de aceptar a esta Solicitud ?")) {
+                vendedor = modelFactoryController.getVendedorActual();
+                modelFactoryController.aceptarSolicitud(solicitudSelecionada);
+                //Accion
+                //System.out.println(vendedor.getListaAliados().get(0).getNombre());
+            }
+
+        }else {
+            modelFactoryController.registrarAccionesSistema("La Solicitud no fue seleccionado", 2, "Seleccionar vendedor");
+            modelFactoryController.mostrarMensaje("Notificacion Vendedor", "Vendedor no seleccionado",
+                    "Para eliminar un Vendedor debe seleccionar a uno", Alert.AlertType.WARNING);
+        }
+    }
+
     private void eliminarSolicitud() throws VendedorNoExisteException, IOException, VendedorException {
 
         if (solicitudSelecionada != null) {
@@ -114,7 +171,7 @@ public class GestionarAliadosControllerViewController {
                 cargarListaSolicitudes();
                 tblSolicitudesAmistad_gestionarAliados.refresh();
             } else {
-                modelFactoryController.registrarAccionesSistema("El vendedor no fue eliminado", 3, "Eliminar vendedor");
+                modelFactoryController.registrarAccionesSistema("La Solicitud no fue eliminada", 3, "Eliminar vendedor");
                 modelFactoryController.mostrarMensaje("Notificacion Vendedor", "Vendedor no eliminado", "El Vendedor  no fue eliminado",
                         Alert.AlertType.INFORMATION);
             }
@@ -126,31 +183,34 @@ public class GestionarAliadosControllerViewController {
         }
     }
 
+
+    private ObservableList<Vendedor> obtenerVendedores() {
+        ArrayList<Vendedor> vendedores = modelFactoryController.obtenerVendedores();
+        listadoVendedores.clear();
+        listadoVendedores.addAll(vendedores);
+        listadoVendedores.remove(modelFactoryController.getVendedorActual());
+        for (Solicitud solicitud : modelFactoryController.getVendedorActual().getListaSolicitudes()) {
+            listadoVendedores.remove(solicitud.getVendedorEnviado());
+        }
+        for (Solicitud solicitud : modelFactoryController.getVendedorActual().getListaSolicitudesEnivadas()) {
+            listadoVendedores.remove(solicitud.getVendedorResivido());
+        }
+        //		for (Vendedor miVendedorActual : listadoVendedores) {
+        //			if (miVendedorActual.getUsurio().equals("admin")) {
+        //				listadoVendedores.remove(miVendedorActual);
+        //			}
+        //		}
+
+        return listadoVendedores;
+    }
     /*
-    public void eliminarSolicitud() throws DatosNulosException {
 
-        if (solicitudSelecionada != null) {
-
-            modelFactoryController.eliminarSolicitud( solicitudSelecionada.getNombre(), vendedor.getCedula());
-            cargarListaSolicitudes();
-            modelFactoryController.mostrarMensaje("Notificacion Solicitud", "Solicitud Borrada Exitosamente", "Solicitud borrada", Alert.AlertType.CONFIRMATION);
-
-            try {
-                throw new DatosNulosException("Datos nulos al agregar producto");
-
-            }catch (Exception e){
-                modelFactoryController.registrarAccionesSistema(e.toString(), 2, "Datos nulos");
-                }
-            }
-            modelFactoryController.mostrarMensaje("Notificacion Solicitud", "Producto no registrado", "No se selecciono algun producto o valores erroneos",
-                    Alert.AlertType.WARNING);
+    private ObservableList<Vendedor> obtenerVendedoresSugeridos(){
+        ArrayList<Vendedor> vendedorsSugeridos = modelFactoryController.obtenerVendedoresSugeridos();
     }
-     */
+    */
 
-    public void recibirNombre(String lbNombre1) throws VendedorNoExisteException {
-        vendedor = modelFactoryController.loginVendedor(lbNombre1);
-        cargarListaSolicitudes();
-    }
+
 
     private boolean mostrarMensajeConfirmacion(String mensaje) {
         Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
@@ -162,6 +222,7 @@ public class GestionarAliadosControllerViewController {
         }
         return false;
     }
+
 }
 
 

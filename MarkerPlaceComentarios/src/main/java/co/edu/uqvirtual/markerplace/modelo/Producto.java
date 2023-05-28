@@ -21,15 +21,15 @@ public class Producto implements Serializable {
     public Producto() {
     }
 
-//    public Producto(String nombre, String imagen, String precio, Estado estado, String fechaPublicaion) {
-//        this.nombre = nombre;
-//        this.imagen = imagen;
-//        this.precio = precio;
-//        this.estado = estado;
-//        this.fechaPublicaion = fechaPublicaion;
-//        listaMeGustaProducto = new ArrayList<>();
-//        listaComentarioProductos = new ArrayList<>();
-//    }
+    public Producto(String nombre, String imagen, String precio, Estado estado, String fechaPublicaion) {
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.precio = precio;
+        this.estado = estado;
+        this.fechaPublicaion = fechaPublicaion;
+        listaMeGustaProducto = new ArrayList<>();
+        listaComentarioProductos = new ArrayList<>();
+    }
 
     public Producto(String nombre, String imagen, String precio, Estado estado) {
         this.nombre = nombre;
@@ -96,7 +96,7 @@ public class Producto implements Serializable {
         this.estado = estado;
     }
     public LocalDateTime obtenerFechaMomento(){
-        return LocalDateTime.parse(fechaPublicaion, DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"));
+        return LocalDateTime.parse(fechaPublicaion, DateTimeFormatter.ofPattern("yyyy-M-d-H-m"));
     }
 
 }

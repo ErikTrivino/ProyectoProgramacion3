@@ -96,5 +96,5 @@ public class Transaccion implements Serializable {
 	public void setValor(Double valor) {
 		this.valor = valor;
 	}
-	
+
 }

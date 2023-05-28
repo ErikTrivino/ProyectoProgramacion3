@@ -15,10 +15,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -29,7 +35,13 @@ public class MarketplaceViewController {
     public Tab tabVendor1;
 
     public Label lblVendedores_cantidadProductos;
+    public Label lblVendedores_cantidadProductos1;
+
     public Label lblVendedores_cantidadContactos;
+    public Label lblVendedores_cantidadContactos1;
+    public Label lblVendedores_ProductosTop;
+    public Label lblVendedores_ProductosTop1;
+
     public Label lblProductos_top;
     public Label lblCantidadProductos;
     public Label lblCantidadChats;
@@ -47,8 +59,12 @@ public class MarketplaceViewController {
     public Label lblApellido3;
     public Label lblCedula3;
     public Tab tabVendedor3;
-    public TableView<Vendedor> tblAliadosVendedor1;
     public Label lblLikes1;
+    public TextField txtVendedor1_estadisticas;
+    public TextField txtVendedor2_estadisticas;
+    public DatePicker dataPicker2;
+    public DatePicker dataPicker1;
+
 
     /**Este es el código del Controller del
      * administrador
@@ -61,11 +77,13 @@ public class MarketplaceViewController {
     ObservableList<Producto> listadoProductos = FXCollections.observableArrayList();
     ObservableList<Producto> listadoProductos11 = FXCollections.observableArrayList();
     ObservableList<Vendedor> listaVendedorAliado = FXCollections.observableArrayList();
-    @FXML
-    private TableColumn<Vendedor, String> colNombreAliado1;
-    @FXML
-    private TableColumn<Vendedor, String> colApellidoAliado1;
+    ObservableList<Producto> listadoProductosAliados = FXCollections.observableArrayList();
+    ObservableList<Producto> listadoProductosVendedorActual = FXCollections.observableArrayList();
+    //ObservableList<Vendedor> listaVendedorAliado = FXCollections.observableArrayList();
     Producto productoSeleccionado;
+    String contenidoReporteEstadisticas = "";
+
+
 
 
 
@@ -79,6 +97,8 @@ public class MarketplaceViewController {
 
 
     //---------------DECLARACION DE RECURSOS DE VISTA
+    @FXML
+    public TableView<Vendedor> tblAliadosVendedor1;
     @FXML
     private TableView<Producto> tblListaProductosVendedorAliado;
     @FXML
@@ -95,6 +115,10 @@ public class MarketplaceViewController {
     private TableColumn<Producto, String> colEstadoProducto11;
     @FXML
     private TableColumn<Producto, String> colPrecioProducto11;
+    @FXML
+    private TableColumn<Vendedor, String> colNombreAliado1;
+    @FXML
+    private TableColumn<Vendedor, String> colIdentificacionAliado1;
     @FXML
     private ResourceBundle resources;
 
@@ -245,6 +269,9 @@ public class MarketplaceViewController {
         }
 
     }
+    private Producto getProductoSelecionado(){
+        return productoSeleccionado;
+    }
 
 
     private void mostraInformacionvendedor(Vendedor vendedor, Usuario usuario) {
@@ -273,6 +300,10 @@ public class MarketplaceViewController {
         this.colPrecioProducto11.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
         this.colNombreEstadisticas.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+
+        //Aliados
+        this.colNombreAliado1.setCellValueFactory((new  PropertyValueFactory<>("nombre")));
+        this.colIdentificacionAliado1.setCellValueFactory(new PropertyValueFactory<>("cedula"));
 
 
         tblListaProductosVendedorAliado.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -605,13 +636,18 @@ public class MarketplaceViewController {
 
     @FXML
     void comentarios_vendedor1ViewAction(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/comentariosView.fxml"));
-
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setScene(scene);
+        if(productoSeleccionado != null){
+            modelFactoryController.setProductoActual1(productoSeleccionado);
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/comentariosView.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+        }else {
+            modelFactoryController.mostrarMensaje("Notificacion Comentarios", "Producto No Selecicionado",
+                    "Para ver los comentarios selecione un producto", Alert.AlertType.WARNING);
+        }
     }
 
     @FXML
@@ -620,14 +656,6 @@ public class MarketplaceViewController {
         loader.setLocation(getClass().getResource("/co/edu/uqvirtual/markerplace/gestionarAliados.fxml"));
 
         Parent root = loader.load();
-        /*
-        GestionarAliadosControllerViewController gestionarAliadosControllerViewController = loader.getController();
-        if(lbNombre1.getText() != null){
-
-        }
-        gestionarAliadosControllerViewController.recibirNombre(lbNombre1.getText());
-        */
-
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(scene);
@@ -691,13 +719,109 @@ public class MarketplaceViewController {
      */
 
     public void llamarVendedorEstadisticas(){
-        String contenido = "";
+        String contenidoVendedores = "";
+        String contenidoProducto = "";
+        String contendioContactos ="";
+        String contendioTopProductos ="";
+        String contendioNumeroTopProductos ="";
 
         for(int i = 0; i < listadoVendedores.size(); i++){
-            contenido +=  listadoVendedores.get(i).getNombre() + " " + listadoVendedores.get(i).getApellido() + "\n";
+            contenidoVendedores +=  listadoVendedores.get(i).getNombre() + " " + listadoVendedores.get(i).getApellido() +"\n";
+            contenidoProducto+= listadoVendedores.get(i).getListaProductos().size()+"\n";
+            contendioContactos += listadoVendedores.get(i).getListaAliados().size()+"\n";
         }
-        lblVendedores_cantidadProductos.setText(contenido);
-        lblVendedores_cantidadContactos.setText(contenido);
+
+        //TOP DE PRODUCTOS
+
+        int contador = 1;
+        ArrayList<Producto> topProductos = modelFactoryController.obtenerTopProductos();
+        for (Producto p:topProductos
+             ) {
+            if(contador != 11){
+                contendioTopProductos +=contador+"  "+ p.getNombre()+"\n";
+                contendioNumeroTopProductos += p.getListaMeGustaProducto().size()+"\n";
+
+                contador++;
+            }
+
+        }
+
+        ///CANTIDAD DE PRODUCTOS
+
+        lblVendedores_cantidadProductos.setText(contenidoVendedores);
+        lblVendedores_cantidadProductos.setTextAlignment(TextAlignment.LEFT);
+        lblVendedores_cantidadProductos1.setText(contenidoProducto);
+        lblVendedores_cantidadProductos1.setTextAlignment(TextAlignment.RIGHT);
+
+
+        contenidoReporteEstadisticas+= "Reporte cantidad de productos por vendedor"+"\n";
+        contenidoReporteEstadisticas+= contenidoVendedores+"\n";
+        contenidoReporteEstadisticas+= contenidoProducto +"\n";
+
+        ////CANTIDAD DE CONTACTOS
+        lblVendedores_cantidadContactos.setText(contenidoVendedores);
+        lblVendedores_cantidadContactos1.setText(contendioContactos);
+
+        contenidoReporteEstadisticas+= "Reporte cantidad de contactos por vendedor"+"\n";
+        contenidoReporteEstadisticas+= contenidoVendedores+"\n";
+        contenidoReporteEstadisticas+= contendioContactos +"\n";
+
+
+        //PRODUCTOS TOP
+        lblVendedores_ProductosTop.setText(contendioTopProductos);
+        lblVendedores_ProductosTop1.setText(contendioNumeroTopProductos);
+
+
+        contenidoReporteEstadisticas+= "Reporte productos top"+"\n";
+        contenidoReporteEstadisticas+= contendioTopProductos+"\n";
+        contenidoReporteEstadisticas+= contendioNumeroTopProductos +"\n";
+
+
+
+
+
+
+
+
+
+
+
+
+
+       //lblVendedores_cantidadContactos.setText(contenido);
+    }
+
+    public void calcularChatsVendedores(ActionEvent actionEvent) {
+        String nombreVendedor1 = txtVendedor1_estadisticas.getText();
+        String nombreVendedor2 = txtVendedor2_estadisticas.getText();
+        //System.out.println(nombreVendedor1+" "+nombreVendedor2);
+        int cantidadChats = 0;
+
+        if(nombreVendedor1!= "" && nombreVendedor2 != ""){
+            cantidadChats =modelFactoryController.calcularChatsVendedores(nombreVendedor1, nombreVendedor2);
+            lblCantidadChats.setText(String.valueOf(cantidadChats));
+        }else{
+            System.out.println("Ingrese correctamente los datos");
+        }
+
+
+    }
+
+    public void calcularCatidadProductosFecha(ActionEvent actionEvent) {
+        LocalDate localDate1 = dataPicker1.getValue();
+        LocalDate localDate2 = dataPicker2.getValue();
+
+        LocalDateTime selectedDateTime1 = LocalDateTime.of(localDate1, LocalTime.of(0, 0, 0));
+        LocalDateTime selectedDateTime2 = LocalDateTime.of(localDate2, LocalTime.of(0, 0, 0));
+
+        String r = modelFactoryController.obtenerCantidadProductosPorFecha(selectedDateTime1, selectedDateTime2);
+        lblCantidadProductos.setText(r);
+    }
+
+    public void generarExportacionEstadisticas(ActionEvent actionEvent) {
+        //String contenido = "";
+
+        modelFactoryController.crearArchivoEstadisticas("C://td//",contenidoReporteEstadisticas );
     }
 
     /**
@@ -711,5 +835,4 @@ public class MarketplaceViewController {
         lblVendedores_cantidadContactos.setText(contenido);
     }
      */
-
 }
